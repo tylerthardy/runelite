@@ -27,4 +27,5 @@ package net.runelite.api;
 public interface Renderable extends Node
 {
 	Model getModel();
+	int getModelHeight();
 }
