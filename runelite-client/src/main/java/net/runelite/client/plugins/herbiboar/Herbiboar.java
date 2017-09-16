@@ -24,8 +24,12 @@
  */
 package net.runelite.client.plugins.herbiboar;
 
+import com.google.common.eventbus.Subscribe;
+import net.runelite.client.events.ChatMessage;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.Overlay;
+
+import java.awt.*;
 
 public class Herbiboar extends Plugin {
     private final HerbiboarOverlay overlay = new HerbiboarOverlay(this);
@@ -39,4 +43,30 @@ public class Herbiboar extends Plugin {
         return overlay;
     }
 
+    @Subscribe
+    public void onChatMessage(ChatMessage event)
+    {
+        String message = event.getMessage();
+
+        if(message == null)
+            return;
+
+        if(message.contains("Closer inspection reveals tracks leading away from you.")) {
+            //Start
+            overlay.newTrail();
+        } else
+        if(message.contains("Nothing seems to be out of place here.")) {
+            //Failure to find
+        } else
+        if(message.contains("Something has passed this way.") || message.contains("Something has disturbed this seaweed recently, it smells.")) {
+            //Find next
+            overlay.nextTrailStep();
+        } else
+        if(message.contains("You stun the creature") || event.getMessage().contains("The creature has successfully"))
+        {
+            overlay.endTrail();
+            System.out.println("ayyy");
+            //color = new Color((int)(Math.random()*0x1000000));
+        }
+    }
 }

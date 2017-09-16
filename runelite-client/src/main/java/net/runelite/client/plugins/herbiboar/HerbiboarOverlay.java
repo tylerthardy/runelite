@@ -25,9 +25,13 @@
 package net.runelite.client.plugins.herbiboar;
 
 import java.awt.*;
+import java.util.HashMap;
 
+import com.google.common.eventbus.Subscribe;
 import net.runelite.api.*;
+import net.runelite.api.Point;
 import net.runelite.client.RuneLite;
+import net.runelite.client.events.ChatMessage;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
@@ -65,30 +69,79 @@ public class HerbiboarOverlay extends Overlay {
         return null;
     }
 
+    private int trailStep = 0;
+    private HashMap<Point,Integer> trailTiles = new HashMap<Point,Integer>();
+    private Color[] colorSteps = {
+            Color.RED,
+            Color.ORANGE,
+            Color.YELLOW,
+            Color.GREEN,
+            Color.BLUE,
+            Color.MAGENTA,
+            Color.PINK,
+            Color.WHITE,
+            Color.BLACK
+    };
+
+    public void newTrail(){
+    }
+
+    public void endTrail(){
+        trailTiles.clear();
+        trailStep = 0;
+    }
+
+    public void nextTrailStep(){
+        trailStep++;
+    }
+
+
     private void renderTileObjects(Graphics2D graphics)
     {
         Region region = client.getRegion();
         Tile[][][] tiles = region.getTiles();
 
         int z = client.getPlane();
-
         for (int x = 0; x < REGION_SIZE; ++x)
         {
             for (int y = 0; y < REGION_SIZE; ++y)
             {
                 Tile tile = tiles[z][x][y];
+
                 if (tile != null)
                 {
                     Player player = client.getLocalPlayer();
                     if (player != null)
                     {
-                        renderGroundObject(graphics, tile, player);
+                        GroundObject groundObject = tile.getGroundObject();
+                        if (groundObject != null)
+                        {
+                            if (player.getLocalLocation().distanceTo(groundObject.getLocalLocation()) <= MAX_DISTANCE)
+                            {
+                                int id = groundObject.getId();
+                                if(id >= 31300 && id <= 31399) {
+                                    Renderable renderable = groundObject.getRenderable();
+                                    if(renderable.getModel() != null) {
+                                        Color color = colorSteps[trailStep];
+                                        Point loc = groundObject.getWorldLocation();
+                                        if(trailTiles.containsKey(loc)) {
+                                            int colorStep = trailTiles.get(loc);
+                                            color = colorSteps[colorStep];
+                                        } else {
+                                            trailTiles.put(loc, trailStep);
+                                        }
+
+                                        OverlayUtil.renderTileOverlay(graphics, groundObject, "ID:" + groundObject.getId(), color);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
-    private void renderGroundObject(Graphics2D graphics, Tile tile, Player player)
+    private void renderGroundObject(Graphics2D graphics, Tile tile, Player player, int count)
     {
         GroundObject groundObject = tile.getGroundObject();
         if (groundObject != null)
@@ -96,10 +149,12 @@ public class HerbiboarOverlay extends Overlay {
             if (player.getLocalLocation().distanceTo(groundObject.getLocalLocation()) <= MAX_DISTANCE)
             {
                 int id = groundObject.getId();
-                if(id >= 31300 && id <= 31399){
+                if(id >= 31300 && id <= 31399) {
                     Renderable renderable = groundObject.getRenderable();
-                    if(renderable.getModelHeight() == 0)
-                        OverlayUtil.renderTileOverlay(graphics, groundObject, "track", new Color(255,255,255));
+                    if(renderable.getModelHeight() == 0) {
+                        OverlayUtil.renderTileOverlay(graphics, groundObject, count + ":", new Color(255,255,255));
+                        count++;
+                    }
                 }
             }
         }
