@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Tyler <http://github.com/tylerthardy>
+ * Copyright (c) 2017, Tyler <https://github.com/tylerthardy>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,38 +22,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.runepouch;
+package net.runelite.client.ui;
 
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.ui.FontManager;
-import net.runelite.client.ui.overlay.Overlay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.awt.Font;
+import java.awt.*;
+import java.io.IOException;
 
-public class Runepouch extends Plugin
+public class FontManager
 {
-	private final RunepouchOverlay overlay = new RunepouchOverlay(this);
-	private Font font;
+	private static final Logger logger = LoggerFactory.getLogger(ClientPanel.class);
 
-	@Override
-	public Overlay getOverlay()
+	private static final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	private static Font runescapeFont;
+	private static Font runescapeSmallFont;
+
+	static
 	{
-		return overlay;
+		try
+		{
+			runescapeFont = Font.createFont(Font.TRUETYPE_FONT, FontManager.class.getResourceAsStream("/runescape.ttf"));
+			runescapeFont = runescapeFont.deriveFont(Font.PLAIN, 16);
+			ge.registerFont(runescapeFont);
+
+			runescapeSmallFont = Font.createFont(Font.TRUETYPE_FONT, FontManager.class.getResourceAsStream("/runescape_small.ttf"));
+			runescapeSmallFont = runescapeSmallFont.deriveFont(Font.PLAIN, 16);
+			ge.registerFont(runescapeSmallFont);
+		}
+		catch (Exception ex)
+		{
+			if (ex instanceof FontFormatException)
+			{
+				logger.error("Font loaded, but format incorrect: " + ex);
+			}
+			if (ex instanceof IOException)
+			{
+				logger.error("Font file not found: " + ex);
+			}
+		}
 	}
 
-	@Override
-	protected void startUp() throws Exception
+	public static Font getRunescapeFont()
 	{
-		font = FontManager.getRunescapeSmallFont();
+		return runescapeFont;
 	}
 
-	@Override
-	protected void shutDown() throws Exception
+	public static Font getRunescapeSmallFont()
 	{
-	}
-
-	public Font getFont()
-	{
-		return font;
+		return runescapeSmallFont;
 	}
 }
