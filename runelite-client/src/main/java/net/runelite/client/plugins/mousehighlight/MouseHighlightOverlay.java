@@ -45,10 +45,12 @@ class MouseHighlightOverlay extends Overlay
 	// <col=ffffff>Player1
 	private final Pattern p = Pattern.compile("<col=([^>]+)>([^<]*)");
 	private final MouseHighlightConfig config;
+	private final MouseHighlight plugin;
 
 	MouseHighlightOverlay(MouseHighlight plugin)
 	{
 		super(OverlayPosition.DYNAMIC);
+		this.plugin = plugin;
 		this.config = plugin.getConfig();
 	}
 	@Override
@@ -64,6 +66,17 @@ class MouseHighlightOverlay extends Overlay
 		if (client.isMenuOpen())
 		{
 			return null;
+		}
+
+		if (config.smallFont())
+		{
+			if (graphics.getFont() != plugin.getSmallFont())
+				graphics.setFont(plugin.getSmallFont());
+		}
+		else
+		{
+			if (graphics.getFont() == plugin.getSmallFont())
+				graphics.setFont(null);
 		}
 
 		String[] targets = client.getMenuTargets();
@@ -158,7 +171,7 @@ class MouseHighlightOverlay extends Overlay
 		for (int i = 0; i < parts.size(); i++)
 		{
 			// Sets the string colour to the colour the game uses.
-			graphics.setColor(Color.decode(colours.get(i)));
+			graphics.setColor(Color.decode("#" + colours.get(i)));
 			// Draws the target (Player, item)
 			graphics.drawString(parts.get(i), x + option_width + parts_width, y);
 

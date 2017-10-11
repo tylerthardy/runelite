@@ -55,4 +55,14 @@ public interface MouseHighlightConfig
 	{
 		return Color.cyan;
 	}
+
+	@ConfigItem(
+			keyName = "smallfont",
+	        name = "Small Font",
+	        description = "Use the small Runescape font for hover info"
+	)
+	default boolean smallFont()
+	{
+		return false;
+	}
 }

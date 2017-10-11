@@ -26,12 +26,16 @@ package net.runelite.client.plugins.mousehighlight;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
+
+import java.awt.Font;
 
 public class MouseHighlight extends Plugin
 {
 	private final MouseHighlightConfig config = RuneLite.getRunelite().getConfigManager().getConfig(MouseHighlightConfig.class);
 	private final Overlay overlay = new MouseHighlightOverlay(this);
+	private Font smallFont;
 
 	@Override
 	public Overlay getOverlay()
@@ -42,7 +46,7 @@ public class MouseHighlight extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-
+		smallFont = FontManager.getRunescapeSmallFont();
 	}
 
 	@Override
@@ -54,5 +58,10 @@ public class MouseHighlight extends Plugin
 	public MouseHighlightConfig getConfig()
 	{
 		return config;
+	}
+
+	public Font getSmallFont()
+	{
+		return smallFont;
 	}
 }
