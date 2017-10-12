@@ -42,24 +42,21 @@ public class FontManager
 	{
 		try
 		{
-			runescapeFont = Font.createFont(Font.TRUETYPE_FONT, FontManager.class.getResourceAsStream("/runescape.ttf"));
+			runescapeFont = Font.createFont(Font.TRUETYPE_FONT, FontManager.class.getResourceAsStream("runescape.ttf"));
 			runescapeFont = runescapeFont.deriveFont(Font.PLAIN, 16);
 			ge.registerFont(runescapeFont);
 
-			runescapeSmallFont = Font.createFont(Font.TRUETYPE_FONT, FontManager.class.getResourceAsStream("/runescape_small.ttf"));
+			runescapeSmallFont = Font.createFont(Font.TRUETYPE_FONT, FontManager.class.getResourceAsStream("runescape_small.ttf"));
 			runescapeSmallFont = runescapeSmallFont.deriveFont(Font.PLAIN, 16);
 			ge.registerFont(runescapeSmallFont);
 		}
-		catch (Exception ex)
+		catch (FontFormatException ex)
 		{
-			if (ex instanceof FontFormatException)
-			{
-				logger.error("Font loaded, but format incorrect: " + ex);
-			}
-			if (ex instanceof IOException)
-			{
-				logger.error("Font file not found: " + ex);
-			}
+			throw new RuntimeException("Font loaded, but format incorrect.", ex);
+		}
+		catch (IOException ex)
+		{
+			throw new RuntimeException("Font file not found.", ex);
 		}
 	}
 
