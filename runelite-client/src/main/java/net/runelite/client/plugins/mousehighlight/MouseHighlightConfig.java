@@ -65,4 +65,14 @@ public interface MouseHighlightConfig
 	{
 		return false;
 	}
+
+	@ConfigItem(
+		keyName = "tooltipleft",
+		name = "Left Side",
+		description = "Show tooltip on left side of cursor"
+	)
+	default boolean leftSide()
+	{
+		return false;
+	}
 }
