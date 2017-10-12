@@ -57,9 +57,9 @@ public interface MouseHighlightConfig
 	}
 
 	@ConfigItem(
-			keyName = "smallfont",
-	        name = "Small Font",
-	        description = "Use the small Runescape font for hover info"
+		keyName = "smallfont",
+		name = "Small Font",
+		description = "Use the small Runescape font for hover info"
 	)
 	default boolean smallFont()
 	{
