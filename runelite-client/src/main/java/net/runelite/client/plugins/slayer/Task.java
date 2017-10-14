@@ -65,8 +65,14 @@ enum Task
 		return this.possibleIds;
 	}
 
-	public static boolean isFromTask(int id)
+	public static boolean isFromTask(String name, int id)
 	{
-		return ids.get(id) != null;
+		Task task = ids.get(id);
+		if (task == null)
+		{
+			return false;
+		}
+
+		return task.getName().toLowerCase().equals(name);
 	}
 }
