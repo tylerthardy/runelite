@@ -97,7 +97,7 @@ public class Slayer extends Plugin
 			System.out.println(String.format("%s/%s", monster, name.toLowerCase()));
 
 			//TODO: you need to check plurals
-			if (name.toLowerCase().equals(monster) || Task.isFromTask(id)) //look up by name
+			if (name.toLowerCase().equals(monster) || Task.isFromTask(monster, id)) //look up by name
 			{
 				killedOne();
 			}
