@@ -77,7 +77,7 @@ public class SlayerOverlay extends Overlay
 		String amount = String.valueOf(plugin.getAmount());
 
 		graphics.setColor(Color.white);
-		graphics.drawString(monster, LEFT_PADDING, y);
+		graphics.drawString(monsterUpper, LEFT_PADDING, y);
 		graphics.drawString(amount, WIDTH - RIGHT_PADDING - metrics.stringWidth(amount), y);
 
 		return new Dimension(WIDTH, boxHeight);
