@@ -26,7 +26,6 @@ package net.runelite.client.plugins.slayer;
 
 import net.runelite.api.NpcID;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
