@@ -59,7 +59,8 @@ public class Slayer extends Plugin
 	{
 	}
 
-	private void save() {
+	private void save()
+	{
 		config.amount(this.amount);
 		config.monster(this.monster);
 	}
@@ -93,7 +94,7 @@ public class Slayer extends Plugin
 			NPC npc = (NPC)actor;
 			int id = npc.getId();
 			String name = npc.getName();
-			System.out.println("killed:"+name+"/"+id);
+			System.out.println("killed:" + name + "/" + id);
 			System.out.println(String.format("%s/%s", monster, name.toLowerCase()));
 
 			//TODO: you need to check plurals
