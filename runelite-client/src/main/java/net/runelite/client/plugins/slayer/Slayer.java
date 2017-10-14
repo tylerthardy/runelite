@@ -27,6 +27,7 @@ package net.runelite.client.plugins.slayer;
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Actor;
 import net.runelite.api.NPC;
+import net.runelite.client.RuneLite;
 import net.runelite.client.events.ActorDeath;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.plugins.Plugin;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 
 public class Slayer extends Plugin
 {
+	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
 	private final SlayerOverlay overlay = new SlayerOverlay(this);
 	private final Pattern p = Pattern.compile("You're assigned to kill (.*)s; only (\\d*) more to go\\.");
 	private String monster;
@@ -45,13 +47,21 @@ public class Slayer extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-
+		if (config.amount() != -1 && config.monster() != "")
+		{
+			this.amount = config.amount();
+			this.monster = config.monster();
+		}
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
+	}
 
+	private void save() {
+		config.amount(this.amount);
+		config.monster(this.monster);
 	}
 
 	@Override
@@ -87,27 +97,25 @@ public class Slayer extends Plugin
 			System.out.println(String.format("%s/%s", monster, name.toLowerCase()));
 
 			//TODO: you need to check plurals
-			if (name.toLowerCase().equals(monster)) //look up by name
+			if (name.toLowerCase().equals(monster) || Task.isFromTask(id)) //look up by name
 			{
-				System.out.println("name kill:"+name+"/"+id);
-				amount--;
-			}
-			else
-			{
-				if (Task.isFromTask(id)) //look up by id
-				{
-					System.out.println("id kill:"+name+"/"+id);
-					amount--;
-				}
+				killedOne();
 			}
 			System.out.println(monster + ":" + amount);
 		}
 	}
 
+	private void killedOne()
+	{
+		amount--;
+		save();
+	}
+
 	private void setTask(String monster, int amount)
 	{
-		this.monster = monster.substring(0,1).toUpperCase() + monster.substring(1,monster.length());
+		this.monster = monster.toLowerCase();
 		this.amount = amount;
+		save();
 		System.out.println("task set:" + this.monster + ":" + this.amount);
 	}
 
