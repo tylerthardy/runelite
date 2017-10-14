@@ -74,13 +74,6 @@ public class Slayer extends Plugin
 		setTask(monster, amount);
 	}
 
-	private void setTask(String monster, int amount)
-	{
-		this.monster = monster;
-		this.amount = amount;
-		System.out.println("task set:" + this.monster + ":" + this.amount);
-	}
-
 	@Subscribe
 	public void onActorDeath(ActorDeath death)
 	{
@@ -109,5 +102,22 @@ public class Slayer extends Plugin
 			}
 			System.out.println(monster + ":" + amount);
 		}
+	}
+
+	private void setTask(String monster, int amount)
+	{
+		this.monster = monster.substring(0,1).toUpperCase() + monster.substring(1,monster.length());
+		this.amount = amount;
+		System.out.println("task set:" + this.monster + ":" + this.amount);
+	}
+
+	public String getMonster()
+	{
+		return monster;
+	}
+
+	public int getAmount()
+	{
+		return amount;
 	}
 }
