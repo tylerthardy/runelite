@@ -72,11 +72,12 @@ public class SlayerOverlay extends Overlay
 
 		//Draw text
 		int y = TOP_PADDING + textHeight;
-		String task = plugin.getMonster(); //TODO: Clean up plugin.monster to be plugin.task
+		String monster = plugin.getMonster();
+		String monsterUpper = monster.substring(0,1).toUpperCase() + monster.substring(1);
 		String amount = String.valueOf(plugin.getAmount());
 
 		graphics.setColor(Color.white);
-		graphics.drawString(task, LEFT_PADDING, y);
+		graphics.drawString(monster, LEFT_PADDING, y);
 		graphics.drawString(amount, WIDTH - RIGHT_PADDING - metrics.stringWidth(amount), y);
 
 		return new Dimension(WIDTH, boxHeight);
