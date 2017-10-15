@@ -40,17 +40,18 @@ public class Slayer extends Plugin
 {
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
 	private final SlayerOverlay overlay = new SlayerOverlay(this);
-	private final Pattern p = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
+
+	private final Pattern taskMsgPattern = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
+
 	private String taskName;
 	private int amount;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		if (config.amount() != -1 && !config.monster().equals(""))
+		if (config.amount() != -1 && !config.taskName().equals(""))
 		{
-			this.amount = config.amount();
-			this.taskName = config.monster();
+			setTask(config.taskName(), config.amount());
 		}
 	}
 
@@ -62,7 +63,7 @@ public class Slayer extends Plugin
 	private void save()
 	{
 		config.amount(this.amount);
-		config.monster(this.taskName);
+		config.taskName(this.taskName);
 	}
 
 	@Override
@@ -74,15 +75,15 @@ public class Slayer extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
-		Matcher m = p.matcher(event.getMessage());
+		Matcher m = taskMsgPattern.matcher(event.getMessage());
 
 		if (!m.find())
 			return;
 
-		String monster = m.group(1);
+		String taskName = m.group(1);
 		int amount = Integer.parseInt(m.group(2));
 
-		setTask(monster, amount);
+		setTask(taskName, amount);
 	}
 
 	@Subscribe
@@ -112,9 +113,9 @@ public class Slayer extends Plugin
 		save(); //Inefficient, but RL is not running plugins' shutDown method. Move there once fixed.
 	}
 
-	private void setTask(String monster, int amount)
+	private void setTask(String taskName, int amount)
 	{
-		this.taskName = monster.toLowerCase();
+		this.taskName = taskName.toLowerCase();
 		this.amount = amount;
 		save();
 
