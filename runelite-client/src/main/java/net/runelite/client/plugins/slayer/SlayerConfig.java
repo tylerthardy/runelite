@@ -45,22 +45,22 @@ public interface SlayerConfig
 	}
 
 	@ConfigItem(
-		keyName = "monster",
+		keyName = "taskName",
 		name = "",
 		description = "",
 		hidden = true
 	)
-	default String monster()
+	default String taskName()
 	{
 		return "";
 	}
 
 	@ConfigItem(
-		keyName = "monster",
+		keyName = "taskName",
 		name = "",
 		description = ""
 	)
-	void monster(String key);
+	void taskName(String key);
 
 	@ConfigItem(
 		keyName = "amount",
