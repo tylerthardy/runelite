@@ -40,17 +40,17 @@ public class Slayer extends Plugin
 {
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
 	private final SlayerOverlay overlay = new SlayerOverlay(this);
-	private final Pattern p = Pattern.compile("You're assigned to kill (.*)s; only (\\d*) more to go\\.");
-	private String monster;
+	private final Pattern p = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
+	private String taskName;
 	private int amount;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		if (config.amount() != -1 && config.monster() != "")
+		if (config.amount() != -1 && !config.monster().equals(""))
 		{
 			this.amount = config.amount();
-			this.monster = config.monster();
+			this.taskName = config.monster();
 		}
 	}
 
@@ -62,7 +62,7 @@ public class Slayer extends Plugin
 	private void save()
 	{
 		config.amount(this.amount);
-		config.monster(this.monster);
+		config.monster(this.taskName);
 	}
 
 	@Override
@@ -92,37 +92,38 @@ public class Slayer extends Plugin
 		if (actor instanceof NPC)
 		{
 			NPC npc = (NPC)actor;
-			int id = npc.getId();
-			String name = npc.getName();
-			System.out.println("killed:" + name + "/" + id);
-			System.out.println(String.format("%s/%s", monster, name.toLowerCase()));
+			String npcName = npc.getName().toLowerCase();
+
+			System.out.println("killed:" + npcName);
+			System.out.println(String.format("%s/%s", taskName, npcName));
 
 			//TODO: you need to check plurals
-			if (name.toLowerCase().equals(monster) || Task.isFromTask(monster, id)) //look up by name
+			if (npcName.equals(taskName) || Task.isNpcFromTask(npcName, taskName))
 			{
 				killedOne();
 			}
-			System.out.println(monster + ":" + amount);
+			System.out.println(taskName + ":" + amount);
 		}
 	}
 
 	private void killedOne()
 	{
 		amount--;
-		save();
+		save(); //Inefficient, but RL is not running plugins' shutDown method. Move there once fixed.
 	}
 
 	private void setTask(String monster, int amount)
 	{
-		this.monster = monster.toLowerCase();
+		this.taskName = monster.toLowerCase();
 		this.amount = amount;
 		save();
-		System.out.println("task set:" + this.monster + ":" + this.amount);
+
+		System.out.println("task set:" + this.taskName + ":" + this.amount);
 	}
 
-	public String getMonster()
+	public String getTaskName()
 	{
-		return monster;
+		return taskName;
 	}
 
 	public int getAmount()
