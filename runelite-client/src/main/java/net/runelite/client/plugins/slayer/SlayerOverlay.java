@@ -55,7 +55,7 @@ public class SlayerOverlay extends Overlay
 	public Dimension render(Graphics2D graphics)
 	{
 		if (client.getGameState() != GameState.LOGGED_IN ||
-				plugin.getMonster() == null || plugin.getAmount() == 0)//|| !config.enabled())
+				plugin.getTaskName() == null || plugin.getAmount() == 0)//|| !config.enabled())
 		{
 			return null;
 		}
@@ -72,7 +72,7 @@ public class SlayerOverlay extends Overlay
 
 		//Draw text
 		int y = TOP_PADDING + textHeight;
-		String monster = plugin.getMonster();
+		String monster = plugin.getTaskName();
 		String monsterUpper = monster.substring(0,1).toUpperCase() + monster.substring(1);
 		String amount = String.valueOf(plugin.getAmount());
 

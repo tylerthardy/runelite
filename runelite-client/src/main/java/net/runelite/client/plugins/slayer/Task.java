@@ -24,35 +24,127 @@
  */
 package net.runelite.client.plugins.slayer;
 
-import net.runelite.api.NpcID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 enum Task
 {
-	DAGANNOTH("Dagannoth", new int[]{NpcID.DAGANNOTH_REX, NpcID.DAGANNOTH_REX, NpcID.DAGANNOTH_SUPREME}),
-	ABYSSAL_DEMON("Abyssal demon", new int[]{NpcID.ABYSSAL_SIRE,NpcID.ABYSSAL_SIRE_5887,NpcID.ABYSSAL_SIRE_5888,NpcID.ABYSSAL_SIRE_5889,NpcID.ABYSSAL_SIRE_5890,NpcID.ABYSSAL_SIRE_5891,NpcID.ABYSSAL_SIRE_5908,});
+	//<editor-fold desc="Enums">
+	ABERRANT_SPECTRE("aberrant spectre", new HashSet<>(Arrays.asList("deviant spectre"))),
+	ABYSSAL_DEMON("abyssal demon", new HashSet<>(Arrays.asList("abyssal sire"))),
+	ANKOU("ankou", null),
+	BANSHEE("banshee", null),
+	BASILISK("basilisk", null),
+	BAT("bat", new HashSet<>(Arrays.asList("giant bat"))),
+	BEAR("bear", new HashSet<>(Arrays.asList("black bear","grizzly bear","callisto"))),
+	BIRD("bird", new HashSet<>(Arrays.asList("bird","chicken","mounted terrorbird gnome","rooster","terrorbird","vulture","undead chicken"))),
+	BLACK_DEMON("black demon", new HashSet<>(Arrays.asList("demonic gorilla","balfrug kreeyath","skotizo"))),
+	BLACK_DRAGON("black dragon", new HashSet<>(Arrays.asList("baby black dragon","king black dragon","brutal black dragon"))),
+	BLOODVELD("bloodveld", new HashSet<>(Arrays.asList("mutated bloodveld"))),
+	BLUE_DRAGON("blue dragon", new HashSet<>(Arrays.asList("baby blue dragon","brutal blue dragon"))),
+	BRINE_RAT("brine rat", null),
+	BRONZE_DRAGON("bronze dragon", null),
+	CATABLEPON("catablepon", null),
+	CAVE_BUG("cave bug", null),
+	CAVE_CRAWLER("cave crawler", null),
+	CAVE_HORROR("cave horror", null),
+	CAVE_SLIME("cave slime", null),
+	COCKATRICE("cockatrice", null),
+	COW("cow", null),
+	CRAWLING_HAND("crawling hand", null),
+	CROCODILE("crocodile", null),
+	DAGANNOTH("dagannoth", new HashSet<>(Arrays.asList("dagannoth fledgeling","dagannoth spawn","dagannoth prime","dagannoth rex","dagannoth supreme"))),
+	DARK_BEAST("dark beast", null),
+	DESERT_LIZARD("desert lizard", new HashSet<>(Arrays.asList("lizard","small lizard"))),
+	DOG("dog", new HashSet<>(Arrays.asList("guard dog","wild dog","jackal"))),
+	DUST_DEVIL("dust devil", null),
+	DWARF("dwarf", new HashSet<>(Arrays.asList("black guard","chaos dwarf"))),
+	EARTH_WARRIOR("earth warrior", null),
+	ELF("elf", new HashSet<>(Arrays.asList("mourner (lvl 108 variant only)"))),
+	FEVER_SPIDER("fever spider", null),
+	FIRE_GIANT("fire giant", null),
+	FLESH_CRAWLER("flesh crawler", null),
+	GARGOYLE("gargoyle", null),
+	GHOST("ghost", new HashSet<>(Arrays.asList("tortured soul"))),
+	GHOUL("ghoul", new HashSet<>(Arrays.asList("ghoul champion"))),
+	GOBLIN("goblin", new HashSet<>(Arrays.asList("goblin champion","sergeant strongstack","sergeant grimspike","sergeant steelwill"))),
+	GORAK("gorak", null),
+	GREATER_DEMON("greater demon", new HashSet<>(Arrays.asList("kril tsutsaroth","tstanon karlak","skotizo"))),
+	GREEN_DRAGON("green dragon", new HashSet<>(Arrays.asList("baby green dragon","brutal green dragon"))),
+	HARPIE_BUG_SWARM("harpie bug swarm", null),
+	HELLHOUND("hellhound", new HashSet<>(Arrays.asList("cerberu"))),
+	HILL_GIANT("hill giant", new HashSet<>(Arrays.asList("giant champion"))),
+	HOBGOBLIN("hobgoblin", new HashSet<>(Arrays.asList("hobgoblin champion"))),
+	ICEFIEND("icefiend", null),
+	ICE_GIANT("ice giant", null),
+	ICE_WARRIOR("ice warrior", null),
+	INFERNAL_MAGE("infernal mage", null),
+	IRON_DRAGON("iron dragon", null),
+	JELLY("jelly", new HashSet<>(Arrays.asList("warped jelly"))),
+	JUNGLE_HORROR("jungle horror", null),
+	KALPHITE("kalphite", new HashSet<>(Arrays.asList("kalphite queen","kalphite worker","kalphite soldier","kalphite guardian"))),
+	KILLERWATT("killerwatt", null),
+	KURASK("kurask", null),
+	LESSER_DEMON("lesser demon", null),
+	MITHRIL_DRAGON("mithril dragon", null),
+	MINOTAUR("minotaur", null),
+	MOGRE("mogre", null),
+	MOLANISK("molanisk", null),
+	MONKEY("monkey", new HashSet<>(Arrays.asList("monkey guard","monkey archer","zombie monkey and more (like padulah)"))),
+	MOSS_GIANT("moss giant", null),
+	NECHRYAEL("nechryael", null),
+	OGRE("ogre", new HashSet<>(Arrays.asList("ogre chieftain","enclave guard"))),
+	OTHERWORLDLY_BEING("otherworldly being", null),
+	PYREFIEND("pyrefiend", null),
+	RED_DRAGON("red dragon", new HashSet<>(Arrays.asList("baby red dragon","brutal red dragon"))),
+	ROCKSLUG("rockslug", null),
+	SCABARITE("scabarite", new HashSet<>(Arrays.asList("locust rider","scarab mage","scarab swarm"))),
+	SCORPION("scorpion", new HashSet<>(Arrays.asList("king scorpion","poison scorpion","pit scorpion","scorpia"))),
+	SEA_SNAKE("sea snake", new HashSet<>(Arrays.asList("sea snake hatchling","sea snake young","giant sea snake"))),
+	SHADE("shade", new HashSet<>(Arrays.asList("loar","phryn","riyl","asyn and fiyr shade"))),
+	SHADOW_WARRIOR("shadow warrior", null),
+	SKELETAL_WYVERN("skeletal wyvern", null),
+	SKELETON("skeleton", new HashSet<>(Arrays.asList("skeleton champion","vetion"))),
+	SMOKE_DEVIL("smoke devil", new HashSet<>(Arrays.asList("thermonuclear smoke devil","nuclear smoke devil"))),
+	SPIDER("spider", new HashSet<>(Arrays.asList("giant spider","shadow spider","jungle spider","deadly red spider","poison spider","blessed spider","kalrag","crypt spider"))),
+	STEEL_DRAGON("steel dragon", null),
+	SUQAH("suqah", null),
+	TERROR_DOG("terror dog", null),
+	TROLL("troll", new HashSet<>(Arrays.asList("mountain troll","ice troll grunt","runt","male and female","ice troll","river troll"))),
+	TUROTH("turoth", null),
+	VAMPIRE("vampire", null),
+	WALL_BEAST("wall beast", null),
+	WATERFIEND("waterfiend", null),
+	WEREWOLF("werewolf", null),
+	WOLF("wolf", new HashSet<>(Arrays.asList("big wolf","dire wolf","jungle wolf","desert wolf","ice wolf"))),
+	ZOMBIE("zombie", new HashSet<>(Arrays.asList("any zombie-class except zogres and zombie monkey"))),
+	ZYGOMITE("zygomite", new HashSet<>(Arrays.asList("ancient zygomite")));
+	//</editor-fold>
+
+	private static final Logger logger = LoggerFactory.getLogger(Task.class);
+
+	private static final Map<String, Task> tasks = new HashMap<>();
+
 	private final String name;
-	private final int[] possibleIds;
-	private static Map<Integer, Task> ids = new HashMap<>();
+	private final HashSet<String> alternatives;
 
 	static
 	{
 		for (Task task : values())
 		{
-			for (int id : task.getIds())
-			{
-				ids.put(id, task);
-			}
+			tasks.put(task.getName(), task);
 		}
 	}
 
-
-	Task(String name, int[] ids)
+	Task(String name, HashSet<String> alternatives)
 	{
 		this.name = name;
-		this.possibleIds = ids;
+		this.alternatives = alternatives;
 	}
 
 	public String getName()
@@ -60,19 +152,15 @@ enum Task
 		return this.name;
 	}
 
-	private int[] getIds()
+	public static boolean isNpcFromTask(String npcName, String taskName)
 	{
-		return this.possibleIds;
-	}
+		System.out.println(npcName);
+		System.out.println(taskName);
 
-	public static boolean isFromTask(String name, int id)
-	{
-		Task task = ids.get(id);
+		Task task = tasks.get(taskName);
 		if (task == null)
-		{
 			return false;
-		}
 
-		return task.getName().toLowerCase().equals(name);
+		return task.alternatives.contains(npcName);
 	}
 }
