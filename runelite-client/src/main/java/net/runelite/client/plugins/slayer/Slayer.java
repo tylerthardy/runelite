@@ -80,7 +80,7 @@ public class Slayer extends Plugin
 		if (!m.find())
 			return;
 
-		String taskName = m.group(1);
+		String taskName = pluralToSingular(m.group(1));
 		int amount = Integer.parseInt(m.group(2));
 
 		setTask(taskName, amount);
@@ -131,8 +131,33 @@ public class Slayer extends Plugin
 		System.out.println("task set:" + this.taskName + ":" + this.amount);
 	}
 
+
+	//Utils
 	private String capsString(String str)
 	{
 		return str.substring(0,1).toUpperCase() + str.substring(1);
+	}
+
+	private static String pluralToSingular(String input)
+	{
+		if (input.endsWith("ies"))
+		{
+			if (input.equals("zombies") || input.equals("aviansies"))
+				return input.replaceAll("s$", "");
+
+			return input.replaceAll("ies$", "y");
+		}
+
+		if (input.endsWith("ves"))
+		{
+			return input.replaceAll("ves$", "f");
+		}
+
+		if (input.endsWith("men"))
+		{
+			return input.replaceAll("men$", "man");
+		}
+
+		return input.replaceAll("s$", "");
 	}
 }
