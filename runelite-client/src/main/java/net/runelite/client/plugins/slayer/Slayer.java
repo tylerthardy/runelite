@@ -111,7 +111,7 @@ public class Slayer extends Plugin
 	{
 		amount--;
 		counter.setText(String.valueOf(amount));
-		save(); //Inefficient, but RL is not running plugins' shutDown method. Move there once fixed.
+		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there once fixed.
 
 	}
 
