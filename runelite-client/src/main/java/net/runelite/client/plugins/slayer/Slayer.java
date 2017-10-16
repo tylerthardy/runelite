@@ -121,21 +121,18 @@ public class Slayer extends Plugin
 		this.amount = amount;
 		save();
 
-		counter = new TaskCounter(Task.getTask(taskName), amount);
 		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
+
+		counter = new TaskCounter(Task.getTask(taskName), amount);
+		counter.setTooltip(capsString(taskName));
 
 		infoBoxManager.addInfoBox(counter);
 
 		System.out.println("task set:" + this.taskName + ":" + this.amount);
 	}
 
-	public String getTaskName()
+	private String capsString(String str)
 	{
-		return taskName;
-	}
-
-	public int getAmount()
-	{
-		return amount;
+		return str.substring(0,1).toUpperCase() + str.substring(1);
 	}
 }
