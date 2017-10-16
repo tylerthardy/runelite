@@ -27,6 +27,10 @@ package net.runelite.client.plugins.slayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -133,6 +137,8 @@ enum Task
 	private final String name;
 	private final HashSet<String> alternatives;
 
+	private BufferedImage image;
+
 	static
 	{
 		for (Task task : values())
@@ -145,6 +151,11 @@ enum Task
 	{
 		this.name = name;
 		this.alternatives = alternatives;
+	}
+
+	public static Task getTask(String taskName)
+	{
+		return tasks.get(taskName);
 	}
 
 	public String getName()
@@ -162,5 +173,25 @@ enum Task
 			return false;
 
 		return task.alternatives.contains(npcName);
+	}
+
+	public BufferedImage getImage()
+	{
+		if (image != null)
+		{
+			return image;
+		}
+
+		InputStream in = Task.class.getResourceAsStream("Enchanted_gem.png");
+		try
+		{
+			image = ImageIO.read(in);
+		}
+		catch (IOException ex)
+		{
+			logger.warn("unable to load image", ex);
+		}
+
+		return image;
 	}
 }
