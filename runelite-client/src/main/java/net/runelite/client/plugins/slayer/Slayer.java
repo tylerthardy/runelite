@@ -31,15 +31,19 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.events.ActorDeath;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.plugins.Plugin;
-import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Slayer extends Plugin
 {
+	private static final Logger logger = LoggerFactory.getLogger(Slayer.class);
+
+	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
-	private final SlayerOverlay overlay = new SlayerOverlay(this);
 
 	private final Pattern taskMsgPattern = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
 
@@ -64,12 +68,6 @@ public class Slayer extends Plugin
 	{
 		config.amount(this.amount);
 		config.taskName(this.taskName);
-	}
-
-	@Override
-	public Overlay getOverlay()
-	{
-		return overlay;
 	}
 
 	@Subscribe
@@ -118,6 +116,11 @@ public class Slayer extends Plugin
 		this.taskName = taskName.toLowerCase();
 		this.amount = amount;
 		save();
+
+		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
+
+		TaskCounter counter = new TaskCounter(Task.getTask(taskName), amount);
+		infoBoxManager.addInfoBox(counter);
 
 		System.out.println("task set:" + this.taskName + ":" + this.amount);
 	}
