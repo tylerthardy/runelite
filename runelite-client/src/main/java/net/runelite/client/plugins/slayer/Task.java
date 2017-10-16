@@ -95,6 +95,7 @@ enum Task
 	KILLERWATT("killerwatt", null),
 	KURASK("kurask", null),
 	LESSER_DEMON("lesser demon", null),
+	LIZARDMAN("lizardman", new HashSet<>(Arrays.asList("lizardman brute","lizardman shaman"))),
 	MITHRIL_DRAGON("mithril dragon", null),
 	MINOTAUR("minotaur", null),
 	MOGRE("mogre", null),
