@@ -43,6 +43,8 @@ public class Slayer extends Plugin
 	private static final Logger logger = LoggerFactory.getLogger(Slayer.class);
 
 	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
+	TaskCounter counter;
+
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
 
 	private final Pattern taskMsgPattern = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
@@ -108,7 +110,9 @@ public class Slayer extends Plugin
 	private void killedOne()
 	{
 		amount--;
+		counter.setText(String.valueOf(amount));
 		save(); //Inefficient, but RL is not running plugins' shutDown method. Move there once fixed.
+
 	}
 
 	private void setTask(String taskName, int amount)
@@ -117,9 +121,9 @@ public class Slayer extends Plugin
 		this.amount = amount;
 		save();
 
+		counter = new TaskCounter(Task.getTask(taskName), amount);
 		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
 
-		TaskCounter counter = new TaskCounter(Task.getTask(taskName), amount);
 		infoBoxManager.addInfoBox(counter);
 
 		System.out.println("task set:" + this.taskName + ":" + this.amount);
