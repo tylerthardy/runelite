@@ -31,15 +31,25 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.events.ActorDeath;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.plugins.Plugin;
-import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@PluginDescriptor(
+		name = "Slayer plugin"
+)
 public class Slayer extends Plugin
 {
+	private static final Logger logger = LoggerFactory.getLogger(Slayer.class);
+
+	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
+	TaskCounter counter;
+
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
-	private final SlayerOverlay overlay = new SlayerOverlay(this);
 
 	private final Pattern taskMsgPattern = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
 
@@ -51,7 +61,7 @@ public class Slayer extends Plugin
 	{
 		if (config.amount() != -1 && !config.taskName().equals(""))
 		{
-			setTask(config.taskName(), config.amount());
+			//setTask(config.taskName(), config.amount());
 		}
 	}
 
@@ -66,12 +76,6 @@ public class Slayer extends Plugin
 		config.taskName(this.taskName);
 	}
 
-	@Override
-	public Overlay getOverlay()
-	{
-		return overlay;
-	}
-
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
@@ -80,7 +84,7 @@ public class Slayer extends Plugin
 		if (!m.find())
 			return;
 
-		String taskName = m.group(1);
+		String taskName = pluralToSingular(m.group(1));
 		int amount = Integer.parseInt(m.group(2));
 
 		setTask(taskName, amount);
@@ -110,7 +114,9 @@ public class Slayer extends Plugin
 	private void killedOne()
 	{
 		amount--;
-		save(); //Inefficient, but RL is not running plugins' shutDown method. Move there once fixed.
+		counter.setText(String.valueOf(amount));
+		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there once fixed.
+
 	}
 
 	private void setTask(String taskName, int amount)
@@ -119,16 +125,43 @@ public class Slayer extends Plugin
 		this.amount = amount;
 		save();
 
+		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
+
+		counter = new TaskCounter(Task.getTask(taskName), amount);
+		counter.setTooltip(capsString(taskName));
+
+		infoBoxManager.addInfoBox(counter);
+
 		System.out.println("task set:" + this.taskName + ":" + this.amount);
 	}
 
-	public String getTaskName()
+
+	//Utils
+	private String capsString(String str)
 	{
-		return taskName;
+		return str.substring(0,1).toUpperCase() + str.substring(1);
 	}
 
-	public int getAmount()
+	private static String pluralToSingular(String input)
 	{
-		return amount;
+		if (input.endsWith("ies"))
+		{
+			if (input.equals("zombies") || input.equals("aviansies"))
+				return input.replaceAll("s$", "");
+
+			return input.replaceAll("ies$", "y");
+		}
+
+		if (input.endsWith("ves"))
+		{
+			return input.replaceAll("ves$", "f");
+		}
+
+		if (input.endsWith("men"))
+		{
+			return input.replaceAll("men$", "man");
+		}
+
+		return input.replaceAll("s$", "");
 	}
 }
