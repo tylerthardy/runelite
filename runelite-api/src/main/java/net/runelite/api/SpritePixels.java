@@ -26,5 +26,7 @@ package net.runelite.api;
 
 public interface SpritePixels
 {
+	int DEFAULT_SHADOW_COLOR = 3153952;
+
 	void drawAt(int x, int y);
 }
