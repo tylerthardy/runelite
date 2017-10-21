@@ -112,7 +112,6 @@ public class Slayer extends Plugin
 			System.out.println("killed:" + npcName);
 			System.out.println(String.format("%s/%s", taskName, npcName));
 
-			//TODO: you need to check plurals
 			if (npcName.equals(taskName) || Task.isNpcFromTask(npcName, taskName))
 			{
 				killedOne();
