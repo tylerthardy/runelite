@@ -32,7 +32,7 @@ public class TaskCounter extends Counter
 
 	public TaskCounter(Task task, int amount)
 	{
-		super(task.getImage(), String.valueOf(amount));
+		super(task.getSprite(), String.valueOf(amount));
 		this.task = task;
 	}
 

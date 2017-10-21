@@ -61,7 +61,7 @@ public class Slayer extends Plugin
 	{
 		if (config.amount() != -1 && !config.taskName().equals(""))
 		{
-			setTask(config.taskName(), config.amount());
+			//setTask(config.taskName(), config.amount());
 		}
 	}
 
