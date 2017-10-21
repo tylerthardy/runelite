@@ -26,10 +26,12 @@ package net.runelite.client.plugins.slayer;
 
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Actor;
+import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.client.RuneLite;
 import net.runelite.client.events.ActorDeath;
 import net.runelite.client.events.ChatMessage;
+import net.runelite.client.events.GameStateChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
@@ -59,10 +61,6 @@ public class Slayer extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		if (config.amount() != -1 && !config.taskName().equals(""))
-		{
-			//setTask(config.taskName(), config.amount());
-		}
 	}
 
 	@Override
@@ -74,6 +72,23 @@ public class Slayer extends Plugin
 	{
 		config.amount(this.amount);
 		config.taskName(this.taskName);
+	}
+
+	@Subscribe
+	public void onGameStateChange(GameStateChanged event)
+	{
+		if (!config.enabled())
+		{
+			return;
+		}
+
+		if (event.getGameState() == GameState.LOGGED_IN)
+		{
+			if (config.amount() != -1 && !config.taskName().isEmpty())
+			{
+				setTask(config.taskName(), config.amount());
+			}
+		}
 	}
 
 	@Subscribe
