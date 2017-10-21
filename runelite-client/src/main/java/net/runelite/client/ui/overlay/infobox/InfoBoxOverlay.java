@@ -35,6 +35,7 @@ import java.util.List;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Point;
+import net.runelite.api.SpritePixels;
 import net.runelite.client.RuneLite;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -86,33 +87,42 @@ public class InfoBoxOverlay extends Overlay
 				continue;
 			}
 
+			// box
 			graphics.setColor(BACKGROUND);
 			graphics.fillRect(x, 0, BOXSIZE, BOXSIZE);
 
 			graphics.setColor(Color.darkGray);
 			graphics.drawRect(x, 0, BOXSIZE, BOXSIZE);
 
-			String str = box.getText();
-			Color color = box.getTextColor();
-
-			BufferedImage image = box.getImage();
-			if (image != null)
-			{
-				graphics.drawImage(image, x + (BOXSIZE - image.getWidth()) / 2, SEPARATOR, null);
-			}
-
-			// text shaddow
-			graphics.setColor(Color.black);
-			graphics.drawString(str, x + ((BOXSIZE - metrics.stringWidth(str)) / 2) + 1, BOXSIZE - SEPARATOR + 1);
-
-			graphics.setColor(color);
-			graphics.drawString(str, x + ((BOXSIZE - metrics.stringWidth(str)) / 2), BOXSIZE - SEPARATOR);
-
 			if (overlayBounds == null)
 			{
 				x += BOXSIZE + SEPARATOR;
 				continue;
 			}
+
+			Rectangle infoboxBounds = new Rectangle((int) overlayBounds.getX() + x, (int) overlayBounds.getY(), BOXSIZE, BOXSIZE);
+
+			//image
+			BufferedImage image = box.getImage();
+			if (image != null)
+			{
+				graphics.drawImage(image, x + (BOXSIZE - image.getWidth()) / 2, SEPARATOR, null);
+			}
+			SpritePixels sprite = box.getSprite();
+			if (sprite != null)
+			{
+				sprite.drawAt(x + (int) overlayBounds.getX(), SEPARATOR + (int) infoboxBounds.getY());
+			}
+
+			// text
+			String str = box.getText();
+			Color color = box.getTextColor();
+
+			graphics.setColor(Color.black); //shadow
+			graphics.drawString(str, x + ((BOXSIZE - metrics.stringWidth(str)) / 2) + 1, BOXSIZE - SEPARATOR + 1);
+
+			graphics.setColor(color); //text
+			graphics.drawString(str, x + ((BOXSIZE - metrics.stringWidth(str)) / 2), BOXSIZE - SEPARATOR);
 
 			String tooltip = box.getTooltip();
 			if (tooltip == null || tooltip.isEmpty())
@@ -121,7 +131,6 @@ public class InfoBoxOverlay extends Overlay
 				continue;
 			}
 
-			Rectangle infoboxBounds = new Rectangle((int) overlayBounds.getX() + x, (int) overlayBounds.getY(), BOXSIZE, BOXSIZE);
 			if (infoboxBounds.contains(mouseX, mouseY))
 			{
 				int tooltipWidth = metrics.stringWidth(tooltip);

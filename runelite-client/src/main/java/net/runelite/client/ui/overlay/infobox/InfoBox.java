@@ -24,12 +24,15 @@
  */
 package net.runelite.client.ui.overlay.infobox;
 
+import net.runelite.api.SpritePixels;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public abstract class InfoBox
 {
-	private final BufferedImage image;
+	private BufferedImage image;
+	private SpritePixels sprite;
 
 	private String tooltip;
 
@@ -38,9 +41,19 @@ public abstract class InfoBox
 		this.image = image;
 	}
 
+	InfoBox(SpritePixels sprite)
+	{
+		this.sprite = sprite;
+	}
+
 	public BufferedImage getImage()
 	{
 		return image;
+	}
+
+	public SpritePixels getSprite()
+	{
+		return sprite;
 	}
 
 	public abstract String getText();
