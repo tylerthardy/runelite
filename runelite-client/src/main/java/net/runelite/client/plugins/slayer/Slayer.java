@@ -79,6 +79,11 @@ public class Slayer extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
+		if (!config.enabled())
+		{
+			return;
+		}
+
 		Matcher m = taskMsgPattern.matcher(event.getMessage());
 
 		if (!m.find())
@@ -93,6 +98,11 @@ public class Slayer extends Plugin
 	@Subscribe
 	public void onActorDeath(ActorDeath death)
 	{
+		if (!config.enabled())
+		{
+			return;
+		}
+
 		Actor actor = death.getActor();
 		if (actor instanceof NPC)
 		{
