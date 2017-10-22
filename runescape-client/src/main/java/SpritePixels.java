@@ -16,7 +16,7 @@ public final class SpritePixels extends Rasterizer2D {
    @Export("height")
    public int height;
    @ObfuscatedName("w")
-   @Export("image")
+   @Export("pixels")
    public int[] image;
    @ObfuscatedName("s")
    @Export("width")

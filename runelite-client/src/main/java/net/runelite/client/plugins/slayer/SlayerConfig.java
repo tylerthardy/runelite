@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017, Seth <Sethtroll3@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,61 +22,61 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.ui.overlay.infobox;
+package net.runelite.client.plugins.slayer;
 
-import net.runelite.api.SpritePixels;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
-public abstract class InfoBox
+@ConfigGroup(
+	keyName = "slayer",
+	name = "Slayer",
+	description = "Configuration for the slayer plugin"
+)
+public interface SlayerConfig
 {
-	private BufferedImage image;
-	private SpritePixels sprite;
-
-	private String tooltip;
-
-	public InfoBox(BufferedImage image)
-	{
-		this.image = image;
-	}
-
-	InfoBox(SpritePixels sprite)
-	{
-		this.sprite = sprite;
-	}
-
-	public BufferedImage getImage()
-	{
-		return image;
-	}
-
-	public SpritePixels getSprite()
-	{
-		return sprite;
-	}
-
-	public abstract String getText();
-
-	public abstract Color getTextColor();
-
-	public boolean render()
+	@ConfigItem(
+		keyName = "enabled",
+		name = "Enable",
+		description = "Configures whether slayer plugin is enabled"
+	)
+	default boolean enabled()
 	{
 		return true;
 	}
 
-	public boolean cull()
+	@ConfigItem(
+		keyName = "taskName",
+		name = "",
+		description = "",
+		hidden = true
+	)
+	default String taskName()
 	{
-		return false;
+		return "";
 	}
 
-	public String getTooltip()
+	@ConfigItem(
+		keyName = "taskName",
+		name = "",
+		description = ""
+	)
+	void taskName(String key);
+
+	@ConfigItem(
+		keyName = "amount",
+		name = "",
+		description = "",
+		hidden = true
+	)
+	default int amount()
 	{
-		return tooltip;
+		return -1;
 	}
 
-	public void setTooltip(String tooltip)
-	{
-		this.tooltip = tooltip;
-	}
+	@ConfigItem(
+		keyName = "amount",
+		name = "",
+		description = ""
+	)
+	void amount(int amt);
 }

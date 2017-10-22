@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017, Tyler <https://github.com/tylerthardy>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,61 +22,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.ui.overlay.infobox;
+package net.runelite.client.plugins.slayer;
 
-import net.runelite.api.SpritePixels;
+import net.runelite.client.ui.overlay.infobox.Counter;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
-public abstract class InfoBox
+public class TaskCounter extends Counter
 {
-	private BufferedImage image;
-	private SpritePixels sprite;
+	private final Task task;
 
-	private String tooltip;
-
-	public InfoBox(BufferedImage image)
+	public TaskCounter(Task task, int amount)
 	{
-		this.image = image;
+		super(task.getImage(), String.valueOf(amount));
+		this.task = task;
 	}
 
-	InfoBox(SpritePixels sprite)
+	public Task getTask()
 	{
-		this.sprite = sprite;
-	}
-
-	public BufferedImage getImage()
-	{
-		return image;
-	}
-
-	public SpritePixels getSprite()
-	{
-		return sprite;
-	}
-
-	public abstract String getText();
-
-	public abstract Color getTextColor();
-
-	public boolean render()
-	{
-		return true;
-	}
-
-	public boolean cull()
-	{
-		return false;
-	}
-
-	public String getTooltip()
-	{
-		return tooltip;
-	}
-
-	public void setTooltip(String tooltip)
-	{
-		this.tooltip = tooltip;
+		return task;
 	}
 }

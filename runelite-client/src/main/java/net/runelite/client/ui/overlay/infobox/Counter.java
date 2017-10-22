@@ -24,6 +24,8 @@
  */
 package net.runelite.client.ui.overlay.infobox;
 
+import net.runelite.api.SpritePixels;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
@@ -34,6 +36,12 @@ public class Counter extends InfoBox
 	public Counter(BufferedImage image, String text)
 	{
 		super(image);
+		this.text = text;
+	}
+
+	public Counter(SpritePixels sprite, String text)
+	{
+		super(sprite);
 		this.text = text;
 	}
 

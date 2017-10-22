@@ -35,6 +35,7 @@ import java.util.List;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Point;
+import net.runelite.api.SpritePixels;
 import net.runelite.client.RuneLite;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -86,58 +87,72 @@ public class InfoBoxOverlay extends Overlay
 				continue;
 			}
 
+			// box
 			graphics.setColor(BACKGROUND);
 			graphics.fillRect(x, 0, BOXSIZE, BOXSIZE);
 
 			graphics.setColor(Color.darkGray);
 			graphics.drawRect(x, 0, BOXSIZE, BOXSIZE);
 
-			String str = box.getText();
-			Color color = box.getTextColor();
+			if (overlayBounds == null)
+			{
+				x += BOXSIZE + SEPARATOR;
+				continue;
+			}
 
+			Rectangle infoboxBounds = new Rectangle((int) overlayBounds.getX() + x, (int) overlayBounds.getY(), BOXSIZE, BOXSIZE);
+
+			//image
 			BufferedImage image = box.getImage();
 			if (image != null)
 			{
 				graphics.drawImage(image, x + (BOXSIZE - image.getWidth()) / 2, SEPARATOR, null);
 			}
+			SpritePixels sprite = box.getSprite();
+			if (sprite != null)
+			{
+				sprite.drawAt(x + (int) overlayBounds.getX(), SEPARATOR + (int) infoboxBounds.getY());
+			}
 
-			// text shaddow
-			graphics.setColor(Color.black);
+			// text
+			String str = box.getText();
+			Color color = box.getTextColor();
+
+			graphics.setColor(Color.black); //shadow
 			graphics.drawString(str, x + ((BOXSIZE - metrics.stringWidth(str)) / 2) + 1, BOXSIZE - SEPARATOR + 1);
 
-			graphics.setColor(color);
+			graphics.setColor(color); //text
 			graphics.drawString(str, x + ((BOXSIZE - metrics.stringWidth(str)) / 2), BOXSIZE - SEPARATOR);
-
-			if (overlayBounds == null)
-			{
-				continue;
-			}
 
 			String tooltip = box.getTooltip();
 			if (tooltip == null || tooltip.isEmpty())
 			{
+				x += BOXSIZE + SEPARATOR;
 				continue;
 			}
 
-			Rectangle bounds = new Rectangle((int) overlayBounds.getX() + x, (int) overlayBounds.getY(), BOXSIZE, BOXSIZE);
-			if (bounds.contains(mouse.getX(), mouse.getY()))
+			if (infoboxBounds.contains(mouseX, mouseY))
 			{
 				int tooltipWidth = metrics.stringWidth(tooltip);
 				int height = metrics.getHeight();
+
+				int tooltipY = mouseY - (int) infoboxBounds.getY();
+				if (tooltipY - height < 0)
+					tooltipY = height;
 
 				Color gray = new Color(Color.darkGray.getRed(), Color.darkGray.getGreen(), Color.darkGray.getBlue(), 190);
 				graphics.setColor(gray);
 
 				// Draws the background rect
-				graphics.fillRect(mouseX, mouseY - (height / 2), tooltipWidth + 6, height);
+				graphics.fillRect(mouseX, tooltipY - height, tooltipWidth + 6, height);
 
 				// Draws the outline of the rect
-				graphics.setColor(Color.BLACK);
-				graphics.drawRect(mouseX, mouseY - (height / 2), tooltipWidth + 6, height);
+				graphics.setColor(Color.yellow);
+				graphics.drawRect(mouseX, tooltipY - height, tooltipWidth + 6, height);
 
 				// Tooltip text
 				graphics.setColor(Color.WHITE);
-				graphics.drawString(tooltip, mouseX + 3, mouseY + 5);
+				graphics.drawString(tooltip, mouseX + 3, tooltipY - height / 2 + 5);
 			}
 
 			x += BOXSIZE + SEPARATOR;

@@ -26,8 +26,11 @@ package net.runelite.client.game;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import net.runelite.client.RuneLite;
 import net.runelite.http.api.item.ItemClient;
 import net.runelite.http.api.item.ItemPrice;
@@ -44,15 +47,17 @@ public class ItemManager
 	 */
 	static final ItemPrice NONE = new ItemPrice();
 
-	private final ItemClient client = new ItemClient();
+	private final ItemClient itemClient = new ItemClient();
 	private final LoadingCache<Integer, ItemPrice> itemPrices;
+
+	private final static ItemImageCache itemImageCache = new ItemImageCache();
 
 	public ItemManager(RuneLite runelite)
 	{
 		itemPrices = CacheBuilder.newBuilder()
 			.maximumSize(512L)
 			.expireAfterAccess(1, TimeUnit.HOURS)
-			.build(new ItemPriceLoader(runelite, client));
+			.build(new ItemPriceLoader(runelite, itemClient));
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class ItemManager
 			return itemPrice == NONE ? null : itemPrice;
 		}
 
-		itemPrice = client.lookupItemPrice(itemId);
+		itemPrice = itemClient.lookupItemPrice(itemId);
 		itemPrices.put(itemId, itemPrice);
 		return itemPrice;
 	}
@@ -112,5 +117,10 @@ public class ItemManager
 		}
 
 		return "" + quantity;
+	}
+
+	public static BufferedImage getImage(int itemId)
+	{
+		return itemImageCache.getImage(itemId);
 	}
 }
