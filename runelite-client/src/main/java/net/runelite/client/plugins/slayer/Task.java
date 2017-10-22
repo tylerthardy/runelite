@@ -26,11 +26,12 @@ package net.runelite.client.plugins.slayer;
 
 import net.runelite.api.Client;
 import net.runelite.api.ItemID;
-import net.runelite.api.SpritePixels;
 import net.runelite.client.RuneLite;
+import net.runelite.client.game.ItemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -180,8 +181,8 @@ enum Task
 		return task.alternatives.contains(npcName);
 	}
 
-	public SpritePixels getSprite()
+	public BufferedImage getImage()
 	{
-		return client.createItemSprite(itemSpriteId, 1, 0, SpritePixels.DEFAULT_SHADOW_COLOR, 0, false);
+		return ItemManager.getImage(itemSpriteId);
 	}
 }
