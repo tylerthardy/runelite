@@ -26,8 +26,14 @@ package net.runelite.client.game;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import net.runelite.api.Client;
+import net.runelite.api.SpritePixels;
 import net.runelite.client.RuneLite;
 import net.runelite.http.api.item.ItemClient;
 import net.runelite.http.api.item.ItemPrice;
@@ -44,15 +50,16 @@ public class ItemManager
 	 */
 	static final ItemPrice NONE = new ItemPrice();
 
-	private final ItemClient client = new ItemClient();
+	private final ItemClient itemClient = new ItemClient();
 	private final LoadingCache<Integer, ItemPrice> itemPrices;
+	private final Client client = RuneLite.getClient();
 
 	public ItemManager(RuneLite runelite)
 	{
 		itemPrices = CacheBuilder.newBuilder()
 			.maximumSize(512L)
 			.expireAfterAccess(1, TimeUnit.HOURS)
-			.build(new ItemPriceLoader(runelite, client));
+			.build(new ItemPriceLoader(runelite, itemClient));
 	}
 
 	/**
@@ -88,7 +95,7 @@ public class ItemManager
 			return itemPrice == NONE ? null : itemPrice;
 		}
 
-		itemPrice = client.lookupItemPrice(itemId);
+		itemPrice = itemClient.lookupItemPrice(itemId);
 		itemPrices.put(itemId, itemPrice);
 		return itemPrice;
 	}
@@ -112,5 +119,29 @@ public class ItemManager
 		}
 
 		return "" + quantity;
+	}
+
+	public Image getImage(int itemId)
+	{
+		return getImage(itemId, 1, 1, SpritePixels.DEFAULT_SHADOW_COLOR, 0, false);
+	}
+
+	public Image getImage(int itemId, int quantity, int border, int bgColor, int stacked, boolean noted)
+	{
+		SpritePixels sprite = client.createItemSprite(itemId, quantity, border, bgColor, stacked, noted);
+		int[] pixels = sprite.getPixels();
+		BufferedImage img = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+		for (int i = 0; i < pixels.length ; i++)
+		{
+			if (pixels[i] != 0)
+			{
+				pixels[i] |= 0xff000000;
+			}
+		}
+
+		img.setRGB(0, 0, sprite.getWidth(), sprite.getHeight(), pixels, 0, sprite.getWidth());
+
+		return img;
 	}
 }
