@@ -54,6 +54,8 @@ public class ItemManager
 	private final LoadingCache<Integer, ItemPrice> itemPrices;
 	private final Client client = RuneLite.getClient();
 
+	private final ItemImageCache itemImageCache = new ItemImageCache();
+
 	public ItemManager(RuneLite runelite)
 	{
 		itemPrices = CacheBuilder.newBuilder()
@@ -123,25 +125,6 @@ public class ItemManager
 
 	public Image getImage(int itemId)
 	{
-		return getImage(itemId, 1, 1, SpritePixels.DEFAULT_SHADOW_COLOR, 0, false);
-	}
-
-	public Image getImage(int itemId, int quantity, int border, int bgColor, int stacked, boolean noted)
-	{
-		SpritePixels sprite = client.createItemSprite(itemId, quantity, border, bgColor, stacked, noted);
-		int[] pixels = sprite.getPixels();
-		BufferedImage img = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-		for (int i = 0; i < pixels.length ; i++)
-		{
-			if (pixels[i] != 0)
-			{
-				pixels[i] |= 0xff000000;
-			}
-		}
-
-		img.setRGB(0, 0, sprite.getWidth(), sprite.getHeight(), pixels, 0, sprite.getWidth());
-
-		return img;
+		return itemImageCache.getImage(itemId);
 	}
 }
