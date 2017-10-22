@@ -30,32 +30,32 @@ import com.google.common.cache.LoadingCache;
 import net.runelite.api.Client;
 import net.runelite.api.SpritePixels;
 import net.runelite.client.RuneLite;
-import net.runelite.client.plugins.runepouch.RunepouchOverlay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
 public class ItemImageCache
 {
 	private static final Logger logger = LoggerFactory.getLogger(ItemImageCache.class);
-	private static final Client client = RuneLite.getClient();
+	private static Client client = RuneLite.getClient();
 
 	private final LoadingCache<Integer, BufferedImage> cache;
 
 	public ItemImageCache()
 	{
 		cache = CacheBuilder.newBuilder()
-			//.maximumSize(RUNE_NAMES.length)
 			.build(
 				new CacheLoader<Integer, BufferedImage>()
 				{
 					@Override
 					public BufferedImage load(Integer itemId) throws Exception
 					{
+						if (client == null)
+						{
+							client = RuneLite.getClient();
+						}
 						SpritePixels sprite = client.createItemSprite(itemId, 1, 1, SpritePixels.DEFAULT_SHADOW_COLOR, 0, false);
 						int[] pixels = sprite.getPixels();
 						BufferedImage img = new BufferedImage(sprite.getWidth(), sprite.getHeight(), BufferedImage.TYPE_INT_ARGB);
