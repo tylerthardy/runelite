@@ -43,6 +43,15 @@ class WidgetID
 	static final int SHOP_GROUP_ID = 300;
 	static final int SHOP_INVENTORY_GROUP_ID = 301;
 	static final int COMBAT_GROUP_ID = 593;
+	static final int DIALOG_NPC_GROUP_ID = 231;
+
+	static class DialogNPC
+	{
+		static final int HEAD_MODEL = 0;
+		static final int NAME = 1;
+		static final int CONTINUE = 2;
+		static final int TEXT = 3;
+	}
 
 	static class PestControl
 	{
