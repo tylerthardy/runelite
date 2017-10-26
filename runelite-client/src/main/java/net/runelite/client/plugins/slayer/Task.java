@@ -108,10 +108,11 @@ enum Task
 	OGRE("ogre", ItemID.ENSOULED_OGRE_HEAD, new HashSet<>(Arrays.asList("ogre chieftain","enclave guard"))),
 	OTHERWORLDLY_BEING("otherworldly being", ItemID.GHOSTLY_HOOD, null),
 	PYREFIEND("pyrefiend", ItemID.PYREFIEND, null),
+	RAT("rat", ItemID.RATS_TAIL, null),
 	RED_DRAGON("red dragon", ItemID.BABY_RED_DRAGON, new HashSet<>(Arrays.asList("baby red dragon","brutal red dragon"))),
 	ROCKSLUG("rockslug", ItemID.ROCKSLUG, null),
 	SCABARITE("scabarite", ItemID.GOLDEN_SCARAB, new HashSet<>(Arrays.asList("locust rider","scarab mage","scarab swarm"))),
-	SCORPION("scorpion", -1, new HashSet<>(Arrays.asList("king scorpion","poison scorpion","pit scorpion","scorpia"))),
+	SCORPION("scorpion", ItemID.ENSOULED_SCORPION_HEAD, new HashSet<>(Arrays.asList("king scorpion","poison scorpion","pit scorpion","scorpia"))),
 	SEA_SNAKE("sea snake", ItemID.SNAKE_CORPSE, new HashSet<>(Arrays.asList("sea snake hatchling","sea snake young","giant sea snake"))),
 	SHADE("shade", ItemID.SHADE_ROBE_TOP, new HashSet<>(Arrays.asList("loar","phryn","riyl","asyn and fiyr shade"))),
 	SHADOW_WARRIOR("shadow warrior", -1, null),
@@ -130,12 +131,10 @@ enum Task
 	WEREWOLF("werewolf", ItemID.WOLFBANE, null),
 	WOLF("wolf", ItemID.GREY_WOLF_FUR, new HashSet<>(Arrays.asList("big wolf","dire wolf","jungle wolf","desert wolf","ice wolf"))),
 	ZOMBIE("zombie", ItemID.ZOMBIE_HEAD, new HashSet<>(Arrays.asList("any zombie-class except zogres and zombie monkey"))),
-	ZYGOMITE("zygomite", ItemID.MUTATED_ZYGOMITE, new HashSet<>(Arrays.asList("ancient zygomite"))), ;
+	ZYGOMITE("zygomite", ItemID.MUTATED_ZYGOMITE, new HashSet<>(Arrays.asList("ancient zygomite")));
 	//</editor-fold>
 
 	private static final Logger logger = LoggerFactory.getLogger(Task.class);
-
-	private Client client = RuneLite.getClient();
 
 	private static final Map<String, Task> tasks = new HashMap<>();
 
@@ -171,9 +170,6 @@ enum Task
 
 	public static boolean isNpcFromTask(String npcName, String taskName)
 	{
-		System.out.println(npcName);
-		System.out.println(taskName);
-
 		Task task = tasks.get(taskName);
 		if (task == null)
 			return false;
@@ -183,6 +179,10 @@ enum Task
 
 	public BufferedImage getImage()
 	{
+		if (itemSpriteId == -1)
+		{
+			return ItemManager.getImage(ItemID.ENCHANTED_GEM);
+		}
 		return ItemManager.getImage(itemSpriteId);
 	}
 }
