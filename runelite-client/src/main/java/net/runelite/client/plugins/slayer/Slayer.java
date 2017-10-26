@@ -55,11 +55,14 @@ public class Slayer extends Plugin
 
 	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
+	private final Client client = RuneLite.getClient();
+
 	private final Pattern taskMsgPattern = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
 	private final Pattern taskAssignPattern = Pattern.compile(".*Your new task is to kill (\\d*) (.*)s?\\.");
 	private final Pattern taskCurrentPattern = Pattern.compile("You're still hunting (.*), you have (.*) to go\\..*");
 	private final Pattern taskComplete = Pattern.compile("You've completed (.*) tasks?; return to a Slayer master.");
-	private final Client client = RuneLite.getClient();
+	private final String taskCompleteChatMsg = "You need something new to hunt.";
+
 
 	private String taskName;
 	private int amount;
@@ -139,7 +142,14 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		Matcher m = taskMsgPattern.matcher(event.getMessage());
+		String chatMsg = event.getMessage();
+		if (chatMsg.equals(taskCompleteChatMsg))
+		{
+			setTask("", 0);
+			return;
+		}
+
+		Matcher m = taskMsgPattern.matcher(chatMsg);
 
 		if (!m.find())
 			return;
@@ -190,6 +200,11 @@ public class Slayer extends Plugin
 		save();
 
 		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
+
+		if (taskName.isEmpty())
+		{
+			return;
+		}
 
 		counter = new TaskCounter(Task.getTask(taskName), amount);
 		counter.setTooltip(capsString(taskName));
