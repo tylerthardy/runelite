@@ -26,18 +26,23 @@ package net.runelite.client.plugins.slayer;
 
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Actor;
+import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.NPC;
+import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.RuneLite;
 import net.runelite.client.events.ActorDeath;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.events.GameStateChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.task.Schedule;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,14 +54,16 @@ public class Slayer extends Plugin
 	private static final Logger logger = LoggerFactory.getLogger(Slayer.class);
 
 	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
-	TaskCounter counter;
-
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
-
 	private final Pattern taskMsgPattern = Pattern.compile("You're assigned to kill (.*?)s?; only (\\d*) more to go\\.");
+	private final Pattern taskAssignPattern = Pattern.compile(".*Your new task is to kill (\\d*) (.*)s?\\.");
+	private final Pattern taskCurrentPattern = Pattern.compile("You're still hunting (.*), you have (.*) to go\\..*");
+	private final Pattern taskComplete = Pattern.compile("You've completed (.*) tasks?; return to a Slayer master.");
+	private final Client client = RuneLite.getClient();
 
 	private String taskName;
 	private int amount;
+	private TaskCounter counter;
 
 	@Override
 	protected void startUp() throws Exception
@@ -72,6 +79,39 @@ public class Slayer extends Plugin
 	{
 		config.amount(this.amount);
 		config.taskName(this.taskName);
+	}
+
+	@Schedule(
+			period = 1,
+			unit = ChronoUnit.MILLIS
+	)
+	public void tick()
+	{
+		if (!config.enabled())
+		{
+			return;
+		}
+
+		System.out.println("tick");
+		if (client == null)
+		{
+			return;
+		}
+
+		Widget NPCDialog = client.getWidget(WidgetInfo.DIALOG_NPC_TEXT);
+		if (NPCDialog == null)
+		{
+			return;
+		}
+
+		Matcher m = taskAssignPattern.matcher(NPCDialog.getText());
+		Matcher m2 = taskCurrentPattern.matcher(NPCDialog.getText());
+		if (!m.find() && !m2.find())
+			return;
+		String taskName = pluralToSingular(m.find() ? m.group(1) : m2.group(1));
+		int amount = Integer.parseInt(m.find() ? m.group(2) : m2.group(2));
+
+		setTask(taskName, amount);
 	}
 
 	@Subscribe
