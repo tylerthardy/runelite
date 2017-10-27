@@ -94,12 +94,20 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		if (event.getGameState() == GameState.LOGGED_IN)
+		switch (event.getGameState())
 		{
-			if (config.amount() != -1 && !config.taskName().isEmpty())
-			{
-				setTask(config.taskName(), config.amount());
-			}
+			case HOPPING:
+			case LOGGING_IN:
+				cachedXp = 0;
+				taskName = "";
+				amount = 0;
+				break;
+			case LOGGED_IN:
+				if (config.amount() != -1 && !config.taskName().isEmpty())
+				{
+					setTask(config.taskName(), config.amount());
+				}
+				break;
 		}
 	}
 
