@@ -228,8 +228,12 @@ public class Slayer extends Plugin
 	private void killedOne()
 	{
 		amount--;
-		counter.setText(String.valueOf(amount));
 		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there if fixed.
+		if (!config.showItemOverlay())
+		{
+			return;
+		}
+		counter.setText(String.valueOf(amount));
 	}
 
 	private void setTask(String name, int amt)
@@ -240,7 +244,7 @@ public class Slayer extends Plugin
 
 		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
 
-		if (taskName.isEmpty())
+		if (taskName.isEmpty() || !config.showInfobox())
 		{
 			return;
 		}

@@ -73,6 +73,11 @@ class SlayerOverlay extends Overlay
 			return null;
 		}
 
+		if (!config.showItemOverlay())
+		{
+			return null;
+		}
+
 		int amount = plugin.getAmount();
 		if (amount == 0)
 		{

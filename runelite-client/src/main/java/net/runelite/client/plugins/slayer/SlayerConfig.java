@@ -45,6 +45,27 @@ public interface SlayerConfig
 	}
 
 	@ConfigItem(
+		keyName = "infobox",
+		name = "Task InfoBox",
+		description = "Display task information in an InfoBox"
+	)
+	default boolean showInfobox()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "itemoverlay",
+		name = "Count on Items",
+		description = "Display task count remaining on slayer items"
+	)
+	default boolean showItemOverlay()
+	{
+		return true;
+	}
+
+	// Stored data
+	@ConfigItem(
 		keyName = "taskName",
 		name = "",
 		description = "",
