@@ -73,6 +73,12 @@ class SlayerOverlay extends Overlay
 			return null;
 		}
 
+		int amount = plugin.getAmount();
+		if (amount == 0)
+		{
+			return null;
+		}
+
 		graphics.setFont(font);
 
 		for (WidgetItem item : getSlayerWidgetItems())
@@ -82,7 +88,7 @@ class SlayerOverlay extends Overlay
 			{
 				continue;
 			}
-			renderWidgetText(graphics, itemId, item.getCanvasBounds(), plugin.getAmount(), Color.white);
+			renderWidgetText(graphics, itemId, item.getCanvasBounds(), amount, Color.white);
 		}
 
 		return null;
