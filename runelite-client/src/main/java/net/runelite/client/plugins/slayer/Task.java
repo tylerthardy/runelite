@@ -131,12 +131,10 @@ enum Task
 	WEREWOLF("werewolf", ItemID.WOLFBANE, null),
 	WOLF("wolf", ItemID.GREY_WOLF_FUR, new HashSet<>(Arrays.asList("big wolf","dire wolf","jungle wolf","desert wolf","ice wolf"))),
 	ZOMBIE("zombie", ItemID.ZOMBIE_HEAD, new HashSet<>(Arrays.asList("any zombie-class except zogres and zombie monkey"))),
-	ZYGOMITE("zygomite", ItemID.MUTATED_ZYGOMITE, new HashSet<>(Arrays.asList("ancient zygomite"))), ;
+	ZYGOMITE("zygomite", ItemID.MUTATED_ZYGOMITE, new HashSet<>(Arrays.asList("ancient zygomite")));
 	//</editor-fold>
 
 	private static final Logger logger = LoggerFactory.getLogger(Task.class);
-
-	private Client client = RuneLite.getClient();
 
 	private static final Map<String, Task> tasks = new HashMap<>();
 
@@ -172,9 +170,6 @@ enum Task
 
 	public static boolean isNpcFromTask(String npcName, String taskName)
 	{
-		System.out.println(npcName);
-		System.out.println(taskName);
-
 		Task task = tasks.get(taskName);
 		if (task == null)
 			return false;

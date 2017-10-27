@@ -27,6 +27,7 @@ package net.runelite.client.plugins.slayer;
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -34,6 +35,7 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.events.ExperienceChanged;
 import net.runelite.client.events.GameStateChanged;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.task.Schedule;
@@ -41,6 +43,7 @@ import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -218,7 +221,7 @@ public class Slayer extends Plugin
 	{
 		amount--;
 		counter.setText(String.valueOf(amount));
-		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there once fixed.
+		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there if fixed.
 	}
 
 	private void setTask(String name, int amt)
@@ -238,9 +241,9 @@ public class Slayer extends Plugin
 		if (task == null)
 		{
 			logger.warn("No slayer task for {} in the Task database", taskName);
-			return;
 		}
-		counter = new TaskCounter(task, amount);
+		BufferedImage taskImg = task != null ? task.getImage() : ItemManager.getImage(ItemID.ENCHANTED_GEM);
+		counter = new TaskCounter(taskImg, amount);
 		counter.setTooltip(capsString(taskName));
 
 		infoBoxManager.addInfoBox(counter);
