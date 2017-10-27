@@ -26,7 +26,6 @@ package net.runelite.client.plugins.slayer;
 
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
 import net.runelite.api.widgets.Widget;
@@ -49,7 +48,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @PluginDescriptor(
-		name = "Slayer plugin"
+	name = "Slayer plugin"
 )
 public class Slayer extends Plugin
 {
@@ -57,6 +56,7 @@ public class Slayer extends Plugin
 
 	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
+	private final SlayerOverlay overlay = new SlayerOverlay(this);
 	private final Client client = RuneLite.getClient();
 
 	//Chat messages
@@ -113,8 +113,8 @@ public class Slayer extends Plugin
 
 	private void save()
 	{
-		config.amount(this.amount);
-		config.taskName(this.taskName);
+		config.amount(amount);
+		config.taskName(taskName);
 	}
 
 	@Schedule(
@@ -128,7 +128,6 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		System.out.println("tick");
 		if (client == null)
 		{
 			return;
@@ -149,7 +148,6 @@ public class Slayer extends Plugin
 		String taskName = pluralToSingular(found1 ? mAssign.group(2) : mCurrent.group(1));
 		int amount = Integer.parseInt(found1 ? mAssign.group(1) : mCurrent.group(2));
 
-		System.out.println("task set:" + taskName + ":" + amount);
 		setTask(taskName, amount);
 	}
 
@@ -228,8 +226,12 @@ public class Slayer extends Plugin
 	private void killedOne()
 	{
 		amount--;
-		counter.setText(String.valueOf(amount));
 		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there if fixed.
+		if (!config.showInfobox())
+		{
+			return;
+		}
+		counter.setText(String.valueOf(amount));
 	}
 
 	private void setTask(String name, int amt)
@@ -240,7 +242,7 @@ public class Slayer extends Plugin
 
 		infoBoxManager.removeIf(t -> t instanceof TaskCounter);
 
-		if (taskName.isEmpty())
+		if (taskName.isEmpty() || !config.showInfobox())
 		{
 			return;
 		}
@@ -255,10 +257,21 @@ public class Slayer extends Plugin
 		counter.setTooltip(capsString(taskName));
 
 		infoBoxManager.addInfoBox(counter);
-
-		System.out.println("task set:" + taskName + ":" + amount);
 	}
 
+	//Getters
+	public SlayerConfig getConfig()
+	{
+		return config;
+	}
+	public SlayerOverlay getOverlay()
+	{
+		return overlay;
+	}
+	public int getAmount()
+	{
+		return amount;
+	}
 
 	//Utils
 	private String capsString(String str)
@@ -271,14 +284,15 @@ public class Slayer extends Plugin
 		if (input.endsWith("ies"))
 		{
 			if (input.equals("zombies") || input.equals("aviansies"))
+			{
 				return input.replaceAll("s$", "");
+			}
 
 			return input.replaceAll("ies$", "y");
 		}
 
 		if (input.endsWith("ves"))
 		{
-			System.out.println(input);
 			return input.replaceAll("ves$", "f");
 		}
 
