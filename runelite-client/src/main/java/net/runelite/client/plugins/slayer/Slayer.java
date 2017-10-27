@@ -26,7 +26,6 @@ package net.runelite.client.plugins.slayer;
 
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
 import net.runelite.api.widgets.Widget;
@@ -57,6 +56,7 @@ public class Slayer extends Plugin
 
 	private final InfoBoxManager infoBoxManager = RuneLite.getRunelite().getInfoBoxManager();
 	private final SlayerConfig config = RuneLite.getRunelite().getConfigManager().getConfig(SlayerConfig.class);
+	private final SlayerOverlay overlay = new SlayerOverlay(this);
 	private final Client client = RuneLite.getClient();
 
 	//Chat messages
@@ -259,6 +259,19 @@ public class Slayer extends Plugin
 		System.out.println("task set:" + taskName + ":" + amount);
 	}
 
+	//Getters
+	public SlayerConfig getConfig()
+	{
+		return config;
+	}
+	public SlayerOverlay getOverlay()
+	{
+		return overlay;
+	}
+	public int getAmount()
+	{
+		return amount;
+	}
 
 	//Utils
 	private String capsString(String str)
