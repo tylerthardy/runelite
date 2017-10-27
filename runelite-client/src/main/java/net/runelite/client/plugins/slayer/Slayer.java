@@ -48,7 +48,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @PluginDescriptor(
-		name = "Slayer plugin"
+	name = "Slayer plugin"
 )
 public class Slayer extends Plugin
 {
@@ -113,8 +113,8 @@ public class Slayer extends Plugin
 
 	private void save()
 	{
-		config.amount(this.amount);
-		config.taskName(this.taskName);
+		config.amount(amount);
+		config.taskName(taskName);
 	}
 
 	@Schedule(
@@ -128,7 +128,6 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		System.out.println("tick");
 		if (client == null)
 		{
 			return;
@@ -149,7 +148,6 @@ public class Slayer extends Plugin
 		String taskName = pluralToSingular(found1 ? mAssign.group(2) : mCurrent.group(1));
 		int amount = Integer.parseInt(found1 ? mAssign.group(1) : mCurrent.group(2));
 
-		System.out.println("task set:" + taskName + ":" + amount);
 		setTask(taskName, amount);
 	}
 
@@ -259,8 +257,6 @@ public class Slayer extends Plugin
 		counter.setTooltip(capsString(taskName));
 
 		infoBoxManager.addInfoBox(counter);
-
-		System.out.println("task set:" + taskName + ":" + amount);
 	}
 
 	//Getters
@@ -295,7 +291,6 @@ public class Slayer extends Plugin
 
 		if (input.endsWith("ves"))
 		{
-			System.out.println(input);
 			return input.replaceAll("ves$", "f");
 		}
 
