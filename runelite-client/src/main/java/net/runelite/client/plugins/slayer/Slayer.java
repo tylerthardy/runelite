@@ -227,7 +227,7 @@ public class Slayer extends Plugin
 	{
 		amount--;
 		save(); //Inefficient, but RL does not run plugins' shutDown method. Move there if fixed.
-		if (!config.showItemOverlay())
+		if (!config.showInfobox())
 		{
 			return;
 		}
@@ -284,7 +284,9 @@ public class Slayer extends Plugin
 		if (input.endsWith("ies"))
 		{
 			if (input.equals("zombies") || input.equals("aviansies"))
+			{
 				return input.replaceAll("s$", "");
+			}
 
 			return input.replaceAll("ies$", "y");
 		}
