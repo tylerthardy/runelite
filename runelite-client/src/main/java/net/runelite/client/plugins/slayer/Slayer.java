@@ -62,7 +62,7 @@ public class Slayer extends Plugin
 	//Chat messages
 	private final Pattern chatGemProgressMsg = Pattern.compile("You're assigned to kill (.*); only (\\d*) more to go\\.");
 	private final String chatGemCompleteMsg = "You need something new to hunt.";
-	private final Pattern chatCompleteMsg = Pattern.compile("You've completed (.*) tasks?(.*)?; return to a Slayer master\\.");
+	private final Pattern chatCompleteMsg = Pattern.compile("You've completed (.*) tasks?( and received (.*) points, giving you a total of (.*))?; return to a Slayer master\\.");
 	private final String chatCancelMsg = "Your task has been cancelled.";
 
 	//NPC messages
@@ -73,6 +73,8 @@ public class Slayer extends Plugin
 	private String taskName;
 	private int amount;
 	private TaskCounter counter;
+	private int streak;
+	private int points;
 	private int cachedXp;
 
 	@Override
@@ -116,6 +118,8 @@ public class Slayer extends Plugin
 	{
 		config.amount(amount);
 		config.taskName(taskName);
+		config.points(points);
+		config.streak(streak);
 	}
 
 	@Schedule(
@@ -162,18 +166,29 @@ public class Slayer extends Plugin
 		}
 
 		String chatMsg = event.getMessage();
+		Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
+		if (mComplete.find())
+		{
+			streak = Integer.parseInt(mComplete.group(1));
+			if (mComplete.groupCount() == 4)
+			{
+				points = Integer.parseInt(mComplete.group(4));
+			}
+			setTask("", 0);
+			return;
 
-		if (chatCompleteMsg.matcher(chatMsg).find() || chatMsg.equals(chatGemCompleteMsg) || chatMsg.equals(chatCancelMsg))
+		}
+		if (chatMsg.equals(chatGemCompleteMsg) || chatMsg.equals(chatCancelMsg))
 		{
 			setTask("", 0);
 			return;
 		}
 
-		Matcher m = chatGemProgressMsg.matcher(chatMsg);
-		if (!m.find())
+		Matcher mProgress = chatGemProgressMsg.matcher(chatMsg);
+		if (!mProgress.find())
 			return;
-		String taskName = pluralToSingular(m.group(1));
-		int amount = Integer.parseInt(m.group(2));
+		String taskName = pluralToSingular(mProgress.group(1));
+		int amount = Integer.parseInt(mProgress.group(2));
 
 		setTask(taskName, amount);
 	}

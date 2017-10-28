@@ -100,4 +100,40 @@ public interface SlayerConfig
 		description = ""
 	)
 	void amount(int amt);
+
+	@ConfigItem(
+		keyName = "streak",
+		name = "",
+		description = "",
+		hidden = true
+	)
+	default int streak()
+	{
+		return -1;
+	}
+
+	@ConfigItem(
+		keyName = "streak",
+		name = "",
+		description = ""
+	)
+	void streak(int streak);
+
+	@ConfigItem(
+		keyName = "points",
+		name = "",
+		description = "",
+		hidden = true
+	)
+	default int points()
+	{
+		return -1;
+	}
+
+	@ConfigItem(
+		keyName = "points",
+		name = "",
+		description = ""
+	)
+	void points(int points);
 }
