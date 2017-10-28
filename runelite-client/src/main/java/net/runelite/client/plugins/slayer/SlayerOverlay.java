@@ -56,6 +56,32 @@ class SlayerOverlay extends Overlay
 	private final Slayer plugin;
 	private final Font font = FontManager.getRunescapeSmallFont().deriveFont(Font.PLAIN, 16);
 
+	private final HashSet<Integer> slayerJewelry = new HashSet<>(Arrays.asList(
+			ItemID.SLAYER_RING_1,
+			ItemID.SLAYER_RING_2,
+			ItemID.SLAYER_RING_3,
+			ItemID.SLAYER_RING_4,
+			ItemID.SLAYER_RING_5,
+			ItemID.SLAYER_RING_6,
+			ItemID.SLAYER_RING_7,
+			ItemID.SLAYER_RING_8
+	));
+	private final HashSet<Integer> slayerEquipment = new HashSet<>(Arrays.asList(
+			ItemID.SLAYER_HELMET,
+			ItemID.SLAYER_HELMET_I,
+			ItemID.BLACK_SLAYER_HELMET,
+			ItemID.BLACK_SLAYER_HELMET_I,
+			ItemID.GREEN_SLAYER_HELMET,
+			ItemID.GREEN_SLAYER_HELMET_I,
+			ItemID.PURPLE_SLAYER_HELMET,
+			ItemID.PURPLE_SLAYER_HELMET_I,
+			ItemID.RED_SLAYER_HELMET,
+			ItemID.RED_SLAYER_HELMET_I,
+			ItemID.SLAYER_RING_ETERNAL,
+			ItemID.ENCHANTED_GEM,
+			ItemID.ETERNAL_GEM
+	));
+
 	SlayerOverlay(Slayer plugin)
 	{
 		super(OverlayPosition.DYNAMIC);
@@ -127,30 +153,4 @@ class SlayerOverlay extends Overlay
 		graphics.setColor(color);
 		graphics.drawString(String.valueOf(amount), textX, textY);
 	}
-
-	private HashSet<Integer> slayerJewelry = new HashSet<>(Arrays.asList(
-			ItemID.SLAYER_RING_1,
-			ItemID.SLAYER_RING_2,
-			ItemID.SLAYER_RING_3,
-			ItemID.SLAYER_RING_4,
-			ItemID.SLAYER_RING_5,
-			ItemID.SLAYER_RING_6,
-			ItemID.SLAYER_RING_7,
-			ItemID.SLAYER_RING_8
-	));
-	private HashSet<Integer> slayerEquipment = new HashSet<>(Arrays.asList(
-			ItemID.SLAYER_HELMET,
-			ItemID.SLAYER_HELMET_I,
-			ItemID.BLACK_SLAYER_HELMET,
-			ItemID.BLACK_SLAYER_HELMET_I,
-			ItemID.GREEN_SLAYER_HELMET,
-			ItemID.GREEN_SLAYER_HELMET_I,
-			ItemID.PURPLE_SLAYER_HELMET,
-			ItemID.PURPLE_SLAYER_HELMET_I,
-			ItemID.RED_SLAYER_HELMET,
-			ItemID.RED_SLAYER_HELMET_I,
-			ItemID.SLAYER_RING_ETERNAL,
-			ItemID.ENCHANTED_GEM,
-			ItemID.ETERNAL_GEM
-	));
 }
