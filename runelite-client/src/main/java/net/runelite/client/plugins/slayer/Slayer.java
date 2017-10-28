@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +64,7 @@ public class Slayer extends Plugin
 	//Chat messages
 	private final Pattern chatGemProgressMsg = Pattern.compile("You're assigned to kill (.*); only (\\d*) more to go\\.");
 	private final String chatGemCompleteMsg = "You need something new to hunt.";
-	private final Pattern chatCompleteMsg = Pattern.compile("You've completed (.*) tasks?(.*)?; return to a Slayer master\\.");
+	private final Pattern chatCompleteMsg = Pattern.compile("[\\d]+(?:,[\\d]+)?");
 	private final String chatCancelMsg = "Your task has been cancelled.";
 
 	//NPC messages
@@ -73,6 +75,8 @@ public class Slayer extends Plugin
 	private String taskName;
 	private int amount;
 	private TaskCounter counter;
+	private int streak;
+	private int points;
 	private int cachedXp;
 
 	@Override
@@ -116,6 +120,8 @@ public class Slayer extends Plugin
 	{
 		config.amount(amount);
 		config.taskName(taskName);
+		config.points(points);
+		config.streak(streak);
 	}
 
 	@Schedule(
@@ -140,13 +146,14 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		Matcher mAssign = npcAssignMsg.matcher(NPCDialog.getText()); //number, name
-		Matcher mCurrent = npcCurrentMsg.matcher(NPCDialog.getText()); //name, number
+		String NPCText = NPCDialog.getText().replaceAll("<br>"," ");
+		Matcher mAssign = npcAssignMsg.matcher(NPCText); //number, name
+		Matcher mCurrent = npcCurrentMsg.matcher(NPCText); //name, number
 		boolean found1 = mAssign.find();
 		boolean found2 = mCurrent.find();
 		if (!found1 && !found2)
 			return;
-		String taskName = pluralToSingular(found1 ? mAssign.group(2) : mCurrent.group(1));
+		String taskName = found1 ? mAssign.group(2) : mCurrent.group(1);
 		int amount = Integer.parseInt(found1 ? mAssign.group(1) : mCurrent.group(2));
 
 		setTask(taskName, amount);
@@ -161,19 +168,47 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		String chatMsg = event.getMessage();
+		String chatMsg = event.getMessage().replaceAll("<[^>]*>", "");
+		if (chatMsg.endsWith("; return to a Slayer master."))
+		{
+			Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
 
-		if (chatCompleteMsg.matcher(chatMsg).find() || chatMsg.equals(chatGemCompleteMsg) || chatMsg.equals(chatCancelMsg))
+			List<String> matches = new ArrayList<>();
+			while(mComplete.find())
+			{
+				matches.add(mComplete.group(0));
+			}
+
+			switch(matches.size())
+			{
+				case 0:
+					streak = 1;
+					break;
+				case 1:
+					streak = Integer.parseInt(matches.get(0));
+					break;
+				case 3:
+					streak = Integer.parseInt(matches.get(0));
+					points = Integer.parseInt(matches.get(2).replaceAll(",",""));
+					break;
+				default:
+					logger.warn("Unreachable default case for message ending in '; return to Slayer master'");
+			}
+			setTask("", 0);
+			return;
+		}
+
+		if (chatMsg.equals(chatGemCompleteMsg) || chatMsg.equals(chatCancelMsg))
 		{
 			setTask("", 0);
 			return;
 		}
 
-		Matcher m = chatGemProgressMsg.matcher(chatMsg);
-		if (!m.find())
+		Matcher mProgress = chatGemProgressMsg.matcher(chatMsg);
+		if (!mProgress.find())
 			return;
-		String taskName = pluralToSingular(m.group(1));
-		int amount = Integer.parseInt(m.group(2));
+		String taskName = mProgress.group(1);
+		int amount = Integer.parseInt(mProgress.group(2));
 
 		setTask(taskName, amount);
 	}
@@ -278,30 +313,5 @@ public class Slayer extends Plugin
 	private String capsString(String str)
 	{
 		return str.substring(0,1).toUpperCase() + str.substring(1);
-	}
-
-	private static String pluralToSingular(String input)
-	{
-		if (input.endsWith("ies"))
-		{
-			if (input.equals("zombies") || input.equals("aviansies"))
-			{
-				return input.replaceAll("s$", "");
-			}
-
-			return input.replaceAll("ies$", "y");
-		}
-
-		if (input.endsWith("ves"))
-		{
-			return input.replaceAll("ves$", "f");
-		}
-
-		if (input.endsWith("men"))
-		{
-			return input.replaceAll("men$", "man");
-		}
-
-		return input.replaceAll("s$", "");
 	}
 }
