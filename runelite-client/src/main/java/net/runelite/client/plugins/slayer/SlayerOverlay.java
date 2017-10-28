@@ -79,7 +79,7 @@ class SlayerOverlay extends Overlay
 		}
 
 		int amount = plugin.getAmount();
-		if (amount == 0)
+		if (amount <= 0)
 		{
 			return null;
 		}
