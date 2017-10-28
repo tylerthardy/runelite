@@ -63,6 +63,7 @@ public class Slayer extends Plugin
 	private final Pattern chatGemProgressMsg = Pattern.compile("You're assigned to kill (.*); only (\\d*) more to go\\.");
 	private final String chatGemCompleteMsg = "You need something new to hunt.";
 	private final Pattern chatCompleteMsg = Pattern.compile("You've completed (.*) tasks?(.*)?; return to a Slayer master\\.");
+	private final String chatCancelMsg = "Your task has been cancelled.";
 
 	//NPC messages
 	private final Pattern npcAssignMsg = Pattern.compile(".*Your new task is to kill (\\d*) (.*)\\.");
@@ -162,7 +163,7 @@ public class Slayer extends Plugin
 
 		String chatMsg = event.getMessage();
 
-		if (chatCompleteMsg.matcher(chatMsg).find() || chatMsg.equals(chatGemCompleteMsg))
+		if (chatCompleteMsg.matcher(chatMsg).find() || chatMsg.equals(chatGemCompleteMsg) || chatMsg.equals(chatCancelMsg))
 		{
 			setTask("", 0);
 			return;
