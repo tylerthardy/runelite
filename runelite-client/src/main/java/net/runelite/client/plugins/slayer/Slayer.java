@@ -146,8 +146,9 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		Matcher mAssign = npcAssignMsg.matcher(NPCDialog.getText()); //number, name
-		Matcher mCurrent = npcCurrentMsg.matcher(NPCDialog.getText()); //name, number
+		String NPCText = NPCDialog.getText().replaceAll("<br>"," ");
+		Matcher mAssign = npcAssignMsg.matcher(NPCText); //number, name
+		Matcher mCurrent = npcCurrentMsg.matcher(NPCText); //name, number
 		boolean found1 = mAssign.find();
 		boolean found2 = mCurrent.find();
 		if (!found1 && !found2)
@@ -167,7 +168,7 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		String chatMsg = event.getMessage();
+		String chatMsg = event.getMessage().replaceAll("<[^>]*>", "");
 		if (chatMsg.endsWith("; return to a Slayer master."))
 		{
 			Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
