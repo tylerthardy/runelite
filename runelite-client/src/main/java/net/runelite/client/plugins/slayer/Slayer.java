@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +64,7 @@ public class Slayer extends Plugin
 	//Chat messages
 	private final Pattern chatGemProgressMsg = Pattern.compile("You're assigned to kill (.*); only (\\d*) more to go\\.");
 	private final String chatGemCompleteMsg = "You need something new to hunt.";
-	private final Pattern chatCompleteMsg = Pattern.compile("You've completed (.*) tasks?( and received (.*) points, giving you a total of (.*))?; return to a Slayer master\\.");
+	private final Pattern chatCompleteMsg = Pattern.compile("[\\d]+(?:,[\\d]+)?");
 	private final String chatCancelMsg = "Your task has been cancelled.";
 
 	//NPC messages
@@ -166,18 +168,35 @@ public class Slayer extends Plugin
 		}
 
 		String chatMsg = event.getMessage();
-		Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
-		if (mComplete.find())
+		if (chatMsg.endsWith("; return to a Slayer master."))
 		{
-			streak = Integer.parseInt(mComplete.group(1));
-			if (mComplete.groupCount() == 4)
+			Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
+
+			List<String> matches = new ArrayList<>();
+			while(mComplete.find())
 			{
-				points = Integer.parseInt(mComplete.group(4));
+				matches.add(mComplete.group(0));
+			}
+
+			switch(matches.size())
+			{
+				case 0:
+					streak = 1;
+					break;
+				case 1:
+					streak = Integer.parseInt(matches.get(0));
+					break;
+				case 3:
+					streak = Integer.parseInt(matches.get(0));
+					points = Integer.parseInt(matches.get(2).replaceAll(",",""));
+					break;
+				default:
+					logger.warn("Unreachable default case for message ending in '; return to Slayer master'");
 			}
 			setTask("", 0);
 			return;
-
 		}
+
 		if (chatMsg.equals(chatGemCompleteMsg) || chatMsg.equals(chatCancelMsg))
 		{
 			setTask("", 0);
