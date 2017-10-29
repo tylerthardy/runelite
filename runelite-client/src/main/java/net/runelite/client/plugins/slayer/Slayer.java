@@ -150,7 +150,7 @@ public class Slayer extends Plugin
 		boolean found2 = mCurrent.find();
 		if (!found1 && !found2)
 			return;
-		String taskName = pluralToSingular(found1 ? mAssign.group(2) : mCurrent.group(1));
+		String taskName = found1 ? mAssign.group(2) : mCurrent.group(1);
 		int amount = Integer.parseInt(found1 ? mAssign.group(1) : mCurrent.group(2));
 
 		setTask(taskName, amount);
@@ -187,7 +187,7 @@ public class Slayer extends Plugin
 		Matcher mProgress = chatGemProgressMsg.matcher(chatMsg);
 		if (!mProgress.find())
 			return;
-		String taskName = pluralToSingular(mProgress.group(1));
+		String taskName = mProgress.group(1);
 		int amount = Integer.parseInt(mProgress.group(2));
 
 		setTask(taskName, amount);
@@ -293,30 +293,5 @@ public class Slayer extends Plugin
 	private String capsString(String str)
 	{
 		return str.substring(0,1).toUpperCase() + str.substring(1);
-	}
-
-	private static String pluralToSingular(String input)
-	{
-		if (input.endsWith("ies"))
-		{
-			if (input.equals("zombies") || input.equals("aviansies"))
-			{
-				return input.replaceAll("s$", "");
-			}
-
-			return input.replaceAll("ies$", "y");
-		}
-
-		if (input.endsWith("ves"))
-		{
-			return input.replaceAll("ves$", "f");
-		}
-
-		if (input.endsWith("men"))
-		{
-			return input.replaceAll("men$", "man");
-		}
-
-		return input.replaceAll("s$", "");
 	}
 }
