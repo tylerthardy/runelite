@@ -72,6 +72,9 @@ public class Slayer extends Plugin
 	private final Pattern npcAssignMsg = Pattern.compile(".*Your new task is to kill (\\d*) (.*)\\.");
 	private final Pattern npcCurrentMsg = Pattern.compile("You're still hunting (.*), you have (\\d*) to go\\..*");
 
+	//Reward UI
+	private final Pattern rewardPointsTxt = Pattern.compile("Reward points: (\\d*)");
+
 
 	private String taskName;
 	private int amount;
@@ -129,35 +132,42 @@ public class Slayer extends Plugin
 		period = 1,
 		unit = ChronoUnit.MILLIS
 	)
-	public void npcScheduledCheck()
+	public void scheduledChecks()
 	{
-		if (!config.enabled())
-		{
-			return;
-		}
-
-		if (client == null)
+		if (!config.enabled() || client == null)
 		{
 			return;
 		}
 
 		Widget NPCDialog = client.getWidget(WidgetInfo.DIALOG_NPC_TEXT);
-		if (NPCDialog == null)
+		if (NPCDialog != null)
 		{
-			return;
+			String NPCText = NPCDialog.getText().replaceAll("<[^>]*>"," "); //remove color and linebreaks
+			Matcher mAssign = npcAssignMsg.matcher(NPCText); //number, name
+			Matcher mCurrent = npcCurrentMsg.matcher(NPCText); //name, number
+			boolean found1 = mAssign.find();
+			boolean found2 = mCurrent.find();
+			if (!found1 && !found2)
+				return;
+			String taskName = found1 ? mAssign.group(2) : mCurrent.group(1);
+			int amount = Integer.parseInt(found1 ? mAssign.group(1) : mCurrent.group(2));
+
+			setTask(taskName, amount);
 		}
 
-		String NPCText = NPCDialog.getText().replaceAll("<[^>]*>"," "); //remove color and linebreaks
-		Matcher mAssign = npcAssignMsg.matcher(NPCText); //number, name
-		Matcher mCurrent = npcCurrentMsg.matcher(NPCText); //name, number
-		boolean found1 = mAssign.find();
-		boolean found2 = mCurrent.find();
-		if (!found1 && !found2)
-			return;
-		String taskName = found1 ? mAssign.group(2) : mCurrent.group(1);
-		int amount = Integer.parseInt(found1 ? mAssign.group(1) : mCurrent.group(2));
-
-		setTask(taskName, amount);
+		Widget rewardsBarWidget = client.getWidget(WidgetInfo.SLAYER_REWARDS_TOPBAR);
+		if (rewardsBarWidget != null)
+		{
+			for (Widget w : rewardsBarWidget.getDynamicChildren())
+			{
+				Matcher mPoints = rewardPointsTxt.matcher(w.getText());
+				if (mPoints.find())
+				{
+					points = Integer.parseInt(mPoints.group(1));
+					break;
+				}
+			}
+		}
 	}
 
 
