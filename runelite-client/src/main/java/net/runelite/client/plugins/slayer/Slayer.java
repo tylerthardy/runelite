@@ -25,6 +25,7 @@
 package net.runelite.client.plugins.slayer;
 
 import com.google.common.eventbus.Subscribe;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
@@ -146,7 +147,7 @@ public class Slayer extends Plugin
 			return;
 		}
 
-		String NPCText = NPCDialog.getText().replaceAll("<br>"," ");
+		String NPCText = NPCDialog.getText().replaceAll("<[^>]*>"," "); //remove color and linebreaks
 		Matcher mAssign = npcAssignMsg.matcher(NPCText); //number, name
 		Matcher mCurrent = npcCurrentMsg.matcher(NPCText); //name, number
 		boolean found1 = mAssign.find();
@@ -163,12 +164,12 @@ public class Slayer extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
-		if (!config.enabled())
+		if (!config.enabled() || event.getType() != ChatMessageType.SERVER )
 		{
 			return;
 		}
 
-		String chatMsg = event.getMessage().replaceAll("<[^>]*>", "");
+		String chatMsg = event.getMessage().replaceAll("<[^>]*>", ""); //remove color and linebreaks
 		if (chatMsg.endsWith("; return to a Slayer master."))
 		{
 			Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
