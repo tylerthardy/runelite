@@ -25,6 +25,7 @@
 package net.runelite.client.plugins.slayer;
 
 import com.google.common.eventbus.Subscribe;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
@@ -163,7 +164,7 @@ public class Slayer extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
-		if (!config.enabled())
+		if (!config.enabled() || event.getType() != ChatMessageType.SERVER )
 		{
 			return;
 		}
