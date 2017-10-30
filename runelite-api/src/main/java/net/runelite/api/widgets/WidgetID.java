@@ -44,6 +44,12 @@ class WidgetID
 	static final int SHOP_INVENTORY_GROUP_ID = 301;
 	static final int COMBAT_GROUP_ID = 593;
 	static final int DIALOG_NPC_GROUP_ID = 231;
+	static final int SLAYER_REWARDS_GROUP_ID = 426;
+
+	static class SlayerRewards
+	{
+		static final int TOP_BAR = 12;
+	}
 
 	static class DialogNPC
 	{
