@@ -38,6 +38,7 @@ public class OverlayRenderer
 		TopDownRendererLeft tdl = new TopDownRendererLeft();
 		TopDownRendererRight tdr = new TopDownRendererRight();
 		DynamicRenderer dr = new DynamicRenderer();
+		TooltipRenderer tt = new TooltipRenderer();
 
 		for (Plugin plugin : RuneLite.getRunelite().getPluginManager().getPlugins())
 		{
@@ -63,5 +64,6 @@ public class OverlayRenderer
 		tdl.render(clientBuffer);
 		tdr.render(clientBuffer);
 		dr.render(clientBuffer);
+		tt.render(clientBuffer);
 	}
 }
