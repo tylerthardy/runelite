@@ -185,12 +185,12 @@ public class Slayer extends Plugin
 			Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
 
 			List<String> matches = new ArrayList<>();
-			while(mComplete.find())
+			while (mComplete.find())
 			{
 				matches.add(mComplete.group(0));
 			}
 
-			switch(matches.size())
+			switch (matches.size())
 			{
 				case 0:
 					streak = 1;

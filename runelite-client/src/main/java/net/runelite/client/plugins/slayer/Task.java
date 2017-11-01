@@ -24,17 +24,13 @@
  */
 package net.runelite.client.plugins.slayer;
 
-import net.runelite.api.Client;
 import net.runelite.api.ItemID;
-import net.runelite.client.RuneLite;
 import net.runelite.client.game.ItemManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 enum Task
