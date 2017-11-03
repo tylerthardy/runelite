@@ -67,6 +67,8 @@ public class Slayer extends Plugin
 	private final String chatGemCompleteMsg = "You need something new to hunt.";
 	private final Pattern chatCompleteMsg = Pattern.compile("[\\d]+(?:,[\\d]+)?");
 	private final String chatCancelMsg = "Your task has been cancelled.";
+	private final Pattern chatExpeditious = Pattern.compile("Your expeditious bracelet helps you progress your slayer task faster. It has (\\d*) charges? left.");
+	private final Pattern chatSlaughter = Pattern.compile("Your bracelet of slaughter prevents your slayer count decreasing. It has (\\d*) charges? left.");
 
 	//NPC messages
 	private final Pattern npcAssignMsg = Pattern.compile(".*Your new task is to kill (\\d*) (.*)\\.");
@@ -179,7 +181,23 @@ public class Slayer extends Plugin
 			return;
 		}
 
+		System.out.println(event.getMessage());
+
 		String chatMsg = event.getMessage().replaceAll("<[^>]*>", ""); //remove color and linebreaks
+
+		Matcher mExpeditious = chatExpeditious.matcher(chatMsg);
+		if (mExpeditious.find())
+		{
+			int charges = Integer.parseInt(mExpeditious.group(1));
+			amount++;
+		}
+		Matcher mSlaughter = chatSlaughter.matcher(chatMsg);
+		if (mSlaughter.find())
+		{
+			int charges = Integer.parseInt(mSlaughter.group(1));
+			amount--;
+		}
+
 		if (chatMsg.endsWith("; return to a Slayer master."))
 		{
 			Matcher mComplete = chatCompleteMsg.matcher(chatMsg);
