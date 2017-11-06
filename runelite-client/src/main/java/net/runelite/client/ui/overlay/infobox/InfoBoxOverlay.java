@@ -39,6 +39,8 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
+import net.runelite.client.ui.overlay.tooltips.Tooltip;
+import net.runelite.client.ui.overlay.tooltips.TooltipPriority;
 
 public class InfoBoxOverlay extends Overlay
 {
@@ -114,8 +116,8 @@ public class InfoBoxOverlay extends Overlay
 				continue;
 			}
 
-			String tooltip = box.getTooltip();
-			if (tooltip == null || tooltip.isEmpty())
+			String tooltipText = box.getTooltip();
+			if (tooltipText == null || tooltipText.isEmpty())
 			{
 				x += BOXSIZE + SEPARATOR;
 				continue;
@@ -124,7 +126,11 @@ public class InfoBoxOverlay extends Overlay
 			Rectangle infoboxBounds = new Rectangle((int) overlayBounds.getX() + x, (int) overlayBounds.getY(), BOXSIZE, BOXSIZE);
 			if (infoboxBounds.contains(mouseX, mouseY))
 			{
-				int tooltipWidth = metrics.stringWidth(tooltip);
+				Tooltip tooltip = new Tooltip(TooltipPriority.HIGH);
+				tooltip.setText(tooltipText);
+				RuneLite.getRunelite().getTooltipRenderer().add(tooltip);
+				/*
+				int tooltipWidth = metrics.stringWidth(tooltipText);
 				int height = metrics.getHeight();
 
 				int tooltipY = mouseY - (int) infoboxBounds.getY();
@@ -143,7 +149,7 @@ public class InfoBoxOverlay extends Overlay
 
 				// Tooltip text
 				graphics.setColor(Color.WHITE);
-				graphics.drawString(tooltip, mouseX + 3, tooltipY - height / 2 + 5);
+				graphics.drawString(tooltipText, mouseX + 3, tooltipY - height / 2 + 5);*/
 			}
 
 			x += BOXSIZE + SEPARATOR;

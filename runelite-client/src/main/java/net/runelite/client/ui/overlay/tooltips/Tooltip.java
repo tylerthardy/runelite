@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017, Tyler <https://github.com/tylerthardy>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,45 +22,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.ui.overlay;
+package net.runelite.client.ui.overlay.tooltips;
 
-import java.awt.image.BufferedImage;
-import net.runelite.client.RuneLite;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.ui.overlay.infobox.InfoBoxOverlay;
-
-public class OverlayRenderer
+public class Tooltip
 {
-	private final InfoBoxOverlay infoBoxOverlay = new InfoBoxOverlay();
+	private TooltipPriority priority; // if multiple overlays exist in the same position, who wins
+	private String tooltipText = "default text";
 
-	public void render(BufferedImage clientBuffer)
+	public Tooltip(TooltipPriority priority)
 	{
-		TopDownRendererLeft tdl = new TopDownRendererLeft();
-		TopDownRendererRight tdr = new TopDownRendererRight();
-		DynamicRenderer dr = new DynamicRenderer();
-		for (Plugin plugin : RuneLite.getRunelite().getPluginManager().getPlugins())
-		{
-			for (Overlay overlay : plugin.getOverlays())
-			{
-				switch (overlay.getPosition())
-				{
-					case TOP_RIGHT:
-						tdr.add(overlay);
-						break;
-					case TOP_LEFT:
-						tdl.add(overlay);
-						break;
-					case DYNAMIC:
-						dr.add(overlay);
-						break;
-				}
-			}
-		}
+		this.priority = priority;
+	}
 
-		tdl.add(infoBoxOverlay);
+	public TooltipPriority getPriority()
+	{
+		return priority;
+	}
 
-		tdl.render(clientBuffer);
-		tdr.render(clientBuffer);
-		dr.render(clientBuffer);
+	public void setPriority(TooltipPriority priority)
+	{
+		this.priority = priority;
+	}
+
+	public String getText() {
+		return tooltipText;
+	}
+
+	public void setText(String tooltipText)
+	{
+		this.tooltipText = tooltipText;
 	}
 }

@@ -22,10 +22,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.ui.overlay;
+package net.runelite.client.ui.overlay.tooltips;
 
 import net.runelite.api.Client;
+import net.runelite.api.Point;
 import net.runelite.client.RuneLite;
+import net.runelite.client.ui.overlay.Renderer;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -36,7 +38,6 @@ import java.util.List;
 
 public class TooltipRenderer implements Renderer
 {
-	private final List<Overlay> overlays = new ArrayList<>();
 	private final Client client = RuneLite.getClient();
 
 	private final int BORDER_SIZE = 2;
@@ -45,26 +46,41 @@ public class TooltipRenderer implements Renderer
 	private static final Color BORDER_COLOR = Color.black;
 	private static final Color FONT_COLOR = Color.white;
 
-	private boolean leftSide = false;
+	private Tooltip tooltip;
 
-	public void add(Overlay overlay)
-	{
-		overlays.add(overlay);
-	}
+	private boolean leftSide = false;
 
 	@Override
 	public void render(BufferedImage clientBuffer)
 	{
+		Point mousePos = client.getMouseCanvasPosition();
 		Graphics2D graphics = clientBuffer.createGraphics();
 		Renderer.setAntiAliasing(graphics);
-		drawTooltip(graphics, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY());
+		drawTooltip(graphics, mousePos.getX(), mousePos.getY());
 		graphics.dispose();
+
+		this.tooltip = null;
+	}
+
+	public void add(Tooltip tooltip)
+	{
+		if (this.tooltip != null && tooltip.getPriority().compareTo(this.tooltip.getPriority()) < 0)
+		{
+			return;
+		}
+
+		this.tooltip = tooltip;
 	}
 
 	private void drawTooltip(Graphics2D graphics, int x, int y)
 	{
+		if (tooltip == null)
+		{
+			return;
+		}
+
 		FontMetrics metrics = graphics.getFontMetrics();
-		String tooltipText = "this is some tooltip text";
+		String tooltipText = tooltip.getText();
 		int textWidth =  metrics.stringWidth(tooltipText);
 		int textHeight =  metrics.getHeight();
 

@@ -42,6 +42,8 @@ import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
+import net.runelite.client.ui.overlay.tooltips.Tooltip;
+import net.runelite.client.ui.overlay.tooltips.TooltipPriority;
 
 public class RunepouchOverlay extends Overlay
 {
@@ -75,7 +77,7 @@ public class RunepouchOverlay extends Overlay
 			return null;
 		}
 
-		Query query = new InventoryItemQuery().idEquals(ItemID.RUNE_POUCH);
+		Query query = new InventoryItemQuery().idEquals(ItemID.RUNE_POUCH, ItemID.COINS_995);
 		WidgetItem[] items = runelite.runQuery(query);
 		if (items.length == 0)
 		{
@@ -87,6 +89,13 @@ public class RunepouchOverlay extends Overlay
 		if (location == null)
 		{
 			return null;
+		}
+
+		if (runePouch.getCanvasBounds().contains(client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY()))
+		{
+			Tooltip tooltip = new Tooltip(TooltipPriority.HIGH);
+			tooltip.setText("WE HERE YO</br> its a big one bois");
+			runelite.getTooltipRenderer().add(tooltip);
 		}
 
 		assert AMOUNT_VARBITS.length == RUNE_VARBITS.length;

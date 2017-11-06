@@ -38,6 +38,9 @@ import net.runelite.api.Point;
 import net.runelite.client.RuneLite;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.tooltips.Tooltip;
+import net.runelite.client.ui.overlay.tooltips.TooltipPriority;
+import net.runelite.client.ui.overlay.tooltips.TooltipRenderer;
 
 class MouseHighlightOverlay extends Overlay
 {
@@ -45,6 +48,7 @@ class MouseHighlightOverlay extends Overlay
 	// <col=ffffff>Player1
 	private final Pattern p = Pattern.compile("<col=([^>]+)>([^<]*)");
 	private final MouseHighlightConfig config;
+	private final Client client = RuneLite.getClient();
 
 	MouseHighlightOverlay(MouseHighlight plugin)
 	{
@@ -54,8 +58,6 @@ class MouseHighlightOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		Client client = RuneLite.getClient();
-
 		if (client.getGameState() != GameState.LOGGED_IN || !config.enabled())
 		{
 			return null;
@@ -92,6 +94,8 @@ class MouseHighlightOverlay extends Overlay
 				return null;
 		}
 
+		System.out.println(option);
+		System.out.println(target);
 		Matcher m = p.matcher(target);
 
 		List<String> parts = new ArrayList<>();
@@ -153,7 +157,7 @@ class MouseHighlightOverlay extends Overlay
 			y = height / 2;
 		}
 
-		Color gray = new Color(Color.darkGray.getRed(), Color.darkGray.getGreen(), Color.darkGray.getBlue(), 190);
+		/*Color gray = new Color(Color.darkGray.getRed(), Color.darkGray.getGreen(), Color.darkGray.getBlue(), 190);
 		graphics.setColor(gray);
 
 		// Draws the background rect
@@ -180,7 +184,11 @@ class MouseHighlightOverlay extends Overlay
 			parts_width += fm.stringWidth(parts.get(i));
 		}
 
-		graphics.setColor(Color.white);
+		graphics.setColor(Color.white);*/
+
+		Tooltip tooltip = new Tooltip(TooltipPriority.NONE);
+		tooltip.setText(option + " "  + parts.toString());
+		RuneLite.getRunelite().getTooltipRenderer().add(tooltip);
 
 		return null;
 	}

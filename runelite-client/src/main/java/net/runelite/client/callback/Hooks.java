@@ -38,6 +38,7 @@ import net.runelite.client.game.DeathChecker;
 import net.runelite.client.task.Scheduler;
 import net.runelite.client.ui.overlay.OverlayRenderer;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
+import net.runelite.client.ui.overlay.tooltips.TooltipRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,11 +86,13 @@ public class Hooks
 	{
 		BufferedImage image = (BufferedImage) mainBufferProvider.getImage();
 
-		OverlayRenderer renderer = runelite.getRenderer();
+		OverlayRenderer renderer = runelite.getOverlayRenderer();
+		TooltipRenderer tooltipRenderer = runelite.getTooltipRenderer();
 
 		try
 		{
 			renderer.render(image);
+			tooltipRenderer.render(image);
 		}
 		catch (Exception ex)
 		{

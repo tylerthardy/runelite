@@ -64,6 +64,7 @@ import net.runelite.client.task.Scheduler;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.OverlayRenderer;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
+import net.runelite.client.ui.overlay.tooltips.TooltipRenderer;
 import net.runelite.http.api.account.AccountClient;
 import org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel;
 import org.slf4j.Logger;
@@ -88,7 +89,8 @@ public class RuneLite
 	private ClientUI gui;
 	private PluginManager pluginManager;
 	private final MenuManager menuManager = new MenuManager(this);
-	private OverlayRenderer renderer;
+	private OverlayRenderer overlayRenderer;
+	private TooltipRenderer tooltipRenderer;
 	private final EventBus eventBus = new EventBus(this::eventExceptionHandler);
 	private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 	private final Scheduler scheduler = new Scheduler(this);
@@ -166,7 +168,8 @@ public class RuneLite
 		// Start plugins
 		pluginManager.start();
 
-		renderer = new OverlayRenderer();
+		overlayRenderer = new OverlayRenderer();
+		tooltipRenderer = new TooltipRenderer();
 
 		loadSession();
 	}
@@ -374,9 +377,14 @@ public class RuneLite
 		return menuManager;
 	}
 
-	public OverlayRenderer getRenderer()
+	public OverlayRenderer getOverlayRenderer()
 	{
-		return renderer;
+		return overlayRenderer;
+	}
+
+	public TooltipRenderer getTooltipRenderer()
+	{
+		return tooltipRenderer;
 	}
 
 	public EventBus getEventBus()
