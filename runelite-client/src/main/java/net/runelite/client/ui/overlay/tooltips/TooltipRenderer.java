@@ -74,38 +74,56 @@ public class TooltipRenderer implements Renderer
 
 	private void drawTooltip(Graphics2D graphics, int x, int y)
 	{
-		if (tooltip == null)
+		if (tooltip == null || tooltip.getText() == null || tooltip.getText().isEmpty())
 		{
 			return;
 		}
 
 		FontMetrics metrics = graphics.getFontMetrics();
 		String tooltipText = tooltip.getText();
-		int textWidth =  metrics.stringWidth(tooltipText);
+		int tooltipWidth = 0;
+		int tooltipHeight = 0;
 		int textHeight =  metrics.getHeight();
+
+		String[] lines = tooltipText.split("</br>");
+		for (String line : lines)
+		{
+			int textWidth =  metrics.stringWidth(line);
+			if (textWidth > tooltipWidth)
+			{
+				tooltipWidth = textWidth;
+			}
+
+			tooltipHeight += textHeight;
+		}
+
 
 		if (leftSide)
 		{
-			x = x - textWidth;
+			x = x - tooltipWidth;
 			if (x < 0)
 				x = 0;
 		}
 		else
 		{
 			int clientWidth = client.getCanvas().getWidth();
-			if (x + textWidth + JSWING_BORDER_RIGHT > clientWidth)
-				x = clientWidth - textWidth - JSWING_BORDER_RIGHT;
+			if (x + tooltipWidth + JSWING_BORDER_RIGHT > clientWidth)
+				x = clientWidth - tooltipWidth - JSWING_BORDER_RIGHT;
 		}
 
-		y = y - textHeight;
+		y = y - tooltipHeight;
 		if (y < 0)
 			y = 0;
 
 		graphics.setColor(BORDER_COLOR);
-		graphics.drawRect(x, y, textWidth + BORDER_SIZE * 2, textHeight + BORDER_SIZE);
+		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(BACKGROUND_COLOR);
-		graphics.fillRect(x, y, textWidth + BORDER_SIZE * 2, textHeight + BORDER_SIZE);
+		graphics.fillRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(FONT_COLOR);
-		graphics.drawString(tooltipText, x + BORDER_SIZE, y + textHeight - BORDER_SIZE);
+		for (int i = 0; i < lines.length; i++)
+		{
+			String line = lines[i];
+			graphics.drawString(line, x + BORDER_SIZE, y + textHeight * (i + 1) - BORDER_SIZE);
+		}
 	}
 }

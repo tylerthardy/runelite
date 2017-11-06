@@ -94,7 +94,7 @@ public class RunepouchOverlay extends Overlay
 		if (runePouch.getCanvasBounds().contains(client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY()))
 		{
 			Tooltip tooltip = new Tooltip(TooltipPriority.HIGH);
-			tooltip.setText("WE HERE YO</br> its a big one bois");
+			tooltip.setText("WE HERE YO</br>its a big one bois");
 			runelite.getTooltipRenderer().add(tooltip);
 		}
 
