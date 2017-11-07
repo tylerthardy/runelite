@@ -27,8 +27,12 @@ package net.runelite.client.plugins.herbiboar;
 import com.google.common.eventbus.Subscribe;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;
 
+@PluginDescriptor(
+		name = "Herbiboar plugin"
+)
 public class Herbiboar extends Plugin
 {
 	private final HerbiboarOverlay overlay = new HerbiboarOverlay(this);
