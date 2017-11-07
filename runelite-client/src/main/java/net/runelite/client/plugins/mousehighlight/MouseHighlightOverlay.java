@@ -187,7 +187,7 @@ class MouseHighlightOverlay extends Overlay
 		graphics.setColor(Color.white);*/
 
 		Tooltip tooltip = new Tooltip(TooltipPriority.NONE);
-		tooltip.setText(option + " "  + parts.toString());
+		tooltip.setText(option + ":" + target);
 		RuneLite.getRunelite().getTooltipRenderer().add(tooltip);
 
 		return null;

@@ -35,6 +35,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TooltipRenderer implements Renderer
 {
@@ -45,6 +47,8 @@ public class TooltipRenderer implements Renderer
 	private static final Color BACKGROUND_COLOR = new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 127);
 	private static final Color BORDER_COLOR = Color.black;
 	private static final Color FONT_COLOR = Color.white;
+
+	private static final Pattern colorPattern = Pattern.compile("<col=?([^>]+)?>");
 
 	private Tooltip tooltip;
 
@@ -85,6 +89,7 @@ public class TooltipRenderer implements Renderer
 		int tooltipHeight = 0;
 		int textHeight =  metrics.getHeight();
 
+		//Tooltip size
 		String[] lines = tooltipText.split("</br>");
 		for (String line : lines)
 		{
@@ -97,7 +102,7 @@ public class TooltipRenderer implements Renderer
 			tooltipHeight += textHeight;
 		}
 
-
+		//Position tooltip
 		if (leftSide)
 		{
 			x = x - tooltipWidth;
@@ -115,6 +120,7 @@ public class TooltipRenderer implements Renderer
 		if (y < 0)
 			y = 0;
 
+		//Render tooltip
 		graphics.setColor(BORDER_COLOR);
 		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(BACKGROUND_COLOR);
@@ -123,6 +129,16 @@ public class TooltipRenderer implements Renderer
 		for (int i = 0; i < lines.length; i++)
 		{
 			String line = lines[i];
+			String[] parts = line.split("<\\/?col=?([^>]+)?>");
+
+			Matcher m = colorPattern.matcher(line);
+			List<String> colors = new ArrayList<String>();
+			while (m.find())
+			{
+				System.out.println(m.matches());
+				colors.add(m.group(1));
+			}
+			System.out.println("COLORS: " + colors.toString());
 			graphics.drawString(line, x + BORDER_SIZE, y + textHeight * (i + 1) - BORDER_SIZE);
 		}
 	}
