@@ -48,7 +48,7 @@ public class TooltipRenderer implements Renderer
 	private static final Color BORDER_COLOR = Color.black;
 	private static final Color FONT_COLOR = Color.white;
 
-	private static final Pattern colorPattern = Pattern.compile("<col=?([^>]+)?>");
+	private static final String colorSplit = "<\\/?col=?([^>]+)?>";
 
 	private Tooltip tooltip;
 
@@ -120,26 +120,41 @@ public class TooltipRenderer implements Renderer
 		if (y < 0)
 			y = 0;
 
-		//Render tooltip
+		//Render tooltip - background
 		graphics.setColor(BORDER_COLOR);
 		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(BACKGROUND_COLOR);
 		graphics.fillRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(FONT_COLOR);
+
+
+		//Render tooltip - text - line by line
 		for (int i = 0; i < lines.length; i++)
 		{
 			String line = lines[i];
-			String[] parts = line.split("<\\/?col=?([^>]+)?>");
+			String[] parts = line.split(colorSplit);
 
-			Matcher m = colorPattern.matcher(line);
-			List<String> colors = new ArrayList<String>();
+			Matcher m = Pattern.compile(colorSplit).matcher(line);
+
+			int begin = 0;
+			String color;
 			while (m.find())
 			{
-				System.out.println(m.matches());
-				colors.add(m.group(1));
+				String preText = line.substring(begin, m.start());
+				if (m.group(0).isEmpty())
+				{
+					//no color tag
+					color = "white";
+				}
+				else
+				{
+					//color tag
+					//graphics.setColor(Color.decode("#" + m.group(0)));
+					color = m.group(0);
+				}
+				System.out.println("part: " + preText);
+				System.out.println("color: " + color);
 			}
-			System.out.println("COLORS: " + colors.toString());
-			graphics.drawString(line, x + BORDER_SIZE, y + textHeight * (i + 1) - BORDER_SIZE);
 		}
 	}
 }
