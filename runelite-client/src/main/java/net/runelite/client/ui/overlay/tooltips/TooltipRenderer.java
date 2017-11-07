@@ -93,7 +93,8 @@ public class TooltipRenderer implements Renderer
 		String[] lines = tooltipText.split("</br>");
 		for (String line : lines)
 		{
-			int textWidth =  metrics.stringWidth(line);
+			String lineClean = line.replaceAll(colorSplit, "");
+			int textWidth =  metrics.stringWidth(lineClean);
 			if (textWidth > tooltipWidth)
 			{
 				tooltipWidth = textWidth;
@@ -121,10 +122,10 @@ public class TooltipRenderer implements Renderer
 			y = 0;
 
 		//Render tooltip - background
-		graphics.setColor(BORDER_COLOR);
-		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(BACKGROUND_COLOR);
 		graphics.fillRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
+		graphics.setColor(BORDER_COLOR);
+		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
 		graphics.setColor(FONT_COLOR);
 
 
@@ -132,29 +133,32 @@ public class TooltipRenderer implements Renderer
 		for (int i = 0; i < lines.length; i++)
 		{
 			String line = lines[i];
-			String[] parts = line.split(colorSplit);
 
 			Matcher m = Pattern.compile(colorSplit).matcher(line);
 
 			int begin = 0;
-			String color;
+			graphics.setColor(Color.white);
 			while (m.find())
 			{
+				System.out.println(begin);
 				String preText = line.substring(begin, m.start());
-				if (m.group(0).isEmpty())
+				graphics.drawString(preText, x, y + (i + 1) * textHeight);
+				if (m.group(1) == null)
 				{
+					System.out.println("no color" + begin);
 					//no color tag
-					color = "white";
+					graphics.setColor(Color.white);
 				}
 				else
 				{
 					//color tag
-					//graphics.setColor(Color.decode("#" + m.group(0)));
-					color = m.group(0);
+					System.out.println("color" + begin);
+					graphics.setColor(Color.decode("#" + m.group(1)));
 				}
-				System.out.println("part: " + preText);
-				System.out.println("color: " + color);
+				begin = m.end();
+				x += metrics.stringWidth(preText);
 			}
+			graphics.drawString(line.substring(begin, line.length()), x, y + (i + 1) * textHeight);
 		}
 	}
 }
