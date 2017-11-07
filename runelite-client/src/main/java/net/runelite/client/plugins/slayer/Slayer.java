@@ -280,7 +280,7 @@ public class Slayer extends Plugin
 
 		BufferedImage taskImg = runelite.getItemManager().getImage(itemSpriteId);
 		counter = new TaskCounter(taskImg, amount);
-		counter.setTooltip(capsString(taskName));
+		counter.setTooltip(String.format("<col=ff7700>%s</br><col=ffff00>Pts:</col> %s</br><col=ffff00>Streak:</col> %s", capsString(taskName), points, streak));
 
 		infoBoxManager.addInfoBox(counter);
 	}

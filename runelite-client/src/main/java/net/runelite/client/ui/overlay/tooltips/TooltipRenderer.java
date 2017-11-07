@@ -44,7 +44,7 @@ public class TooltipRenderer implements Renderer
 
 	private final int BORDER_SIZE = 2;
 	private final int JSWING_BORDER_RIGHT = 5;
-	private static final Color BACKGROUND_COLOR = new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 127);
+	private static final Color BACKGROUND_COLOR = new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 100);
 	private static final Color BORDER_COLOR = Color.black;
 	private static final Color FONT_COLOR = Color.white;
 
@@ -88,8 +88,9 @@ public class TooltipRenderer implements Renderer
 		int tooltipWidth = 0;
 		int tooltipHeight = 0;
 		int textHeight =  metrics.getHeight();
+		int textDescent = metrics.getDescent();
 
-		//Tooltip size
+		// Tooltip size
 		String[] lines = tooltipText.split("</br>");
 		for (String line : lines)
 		{
@@ -103,7 +104,7 @@ public class TooltipRenderer implements Renderer
 			tooltipHeight += textHeight;
 		}
 
-		//Position tooltip
+		// Position tooltip
 		if (leftSide)
 		{
 			x = x - tooltipWidth;
@@ -121,44 +122,51 @@ public class TooltipRenderer implements Renderer
 		if (y < 0)
 			y = 0;
 
-		//Render tooltip - background
+		// Render tooltip - background
 		graphics.setColor(BACKGROUND_COLOR);
-		graphics.fillRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
+		graphics.fillRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight);
 		graphics.setColor(BORDER_COLOR);
-		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight + BORDER_SIZE);
+		graphics.drawRect(x, y, tooltipWidth + BORDER_SIZE * 2, tooltipHeight);
 		graphics.setColor(FONT_COLOR);
 
-
-		//Render tooltip - text - line by line
+		// Render tooltip - text - line by line
+		int lineX;
+		Color nextColor = Color.WHITE;
 		for (int i = 0; i < lines.length; i++)
 		{
+			lineX = x;
 			String line = lines[i];
-
 			Matcher m = Pattern.compile(colorSplit).matcher(line);
 
 			int begin = 0;
-			graphics.setColor(Color.white);
 			while (m.find())
 			{
-				System.out.println(begin);
+				// Draw text prior to color tag
 				String preText = line.substring(begin, m.start());
-				graphics.drawString(preText, x, y + (i + 1) * textHeight);
+				graphics.setColor(Color.BLACK);
+				graphics.drawString(preText, lineX + BORDER_SIZE + 1, y + (i + 1) * textHeight - textDescent + 1); // shadow
+				graphics.setColor(nextColor);
+				graphics.drawString(preText, lineX + BORDER_SIZE, y + (i + 1) * textHeight - textDescent); // text
+
+				// Set color for next text part
 				if (m.group(1) == null)
 				{
-					System.out.println("no color" + begin);
-					//no color tag
-					graphics.setColor(Color.white);
+					// no color tag
+					nextColor = Color.WHITE;
 				}
 				else
 				{
-					//color tag
-					System.out.println("color" + begin);
-					graphics.setColor(Color.decode("#" + m.group(1)));
+					// color tag
+					nextColor = Color.decode("#" + m.group(1));
 				}
 				begin = m.end();
-				x += metrics.stringWidth(preText);
+				lineX += metrics.stringWidth(preText);
 			}
-			graphics.drawString(line.substring(begin, line.length()), x, y + (i + 1) * textHeight);
+			// Draw trailing text (after last tag)
+			graphics.setColor(Color.BLACK);
+			graphics.drawString(line.substring(begin, line.length()), lineX + BORDER_SIZE + 1, y + (i + 1) * textHeight - textDescent + 1);
+			graphics.setColor(nextColor);
+			graphics.drawString(line.substring(begin, line.length()), lineX + BORDER_SIZE, y + (i + 1) * textHeight - textDescent);
 		}
 	}
 }

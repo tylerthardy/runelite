@@ -60,6 +60,7 @@ public class RunepouchOverlay extends Overlay
 	private final RuneLite runelite = RuneLite.getRunelite();
 	private final RuneImageCache runeImageCache = new RuneImageCache();
 	private final RunepouchConfig config;
+	private final Tooltip tooltip = new Tooltip(TooltipPriority.HIGH);
 
 	RunepouchOverlay(Runepouch plugin)
 	{
@@ -77,7 +78,7 @@ public class RunepouchOverlay extends Overlay
 			return null;
 		}
 
-		Query query = new InventoryItemQuery().idEquals(ItemID.RUNE_POUCH, ItemID.COINS_995);
+		Query query = new InventoryItemQuery().idEquals(ItemID.RUNE_POUCH);
 		WidgetItem[] items = runelite.runQuery(query);
 		if (items.length == 0)
 		{
@@ -91,27 +92,25 @@ public class RunepouchOverlay extends Overlay
 			return null;
 		}
 
-		if (runePouch.getCanvasBounds().contains(client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY()))
-		{
-			Tooltip tooltip = new Tooltip(TooltipPriority.HIGH);
-			tooltip.setText("WE HERE YO</br>its a big one bois");
-			runelite.getTooltipRenderer().add(tooltip);
-		}
+
 
 		assert AMOUNT_VARBITS.length == RUNE_VARBITS.length;
 
 		graphics.setFont(FontManager.getRunescapeSmallFont());
 
+		String tooltipText = "";
 		for (int i = 0; i < AMOUNT_VARBITS.length; i++)
 		{
 			Varbits amountVarbit = AMOUNT_VARBITS[i];
-			Varbits runeVarbit = RUNE_VARBITS[i];
 
 			int amount = client.getSetting(amountVarbit);
 			if (amount <= 0)
 			{
 				continue;
 			}
+
+			Varbits runeVarbit = RUNE_VARBITS[i];
+			int runeId = client.getSetting(runeVarbit);
 
 			graphics.setColor(Color.black);
 			graphics.drawString("" + formatNumber(amount), location.getX() + (config.showIcons() ? 13 : 1),
@@ -121,12 +120,13 @@ public class RunepouchOverlay extends Overlay
 			graphics.drawString("" + formatNumber(amount), location.getX() + (config.showIcons() ? 12 : 0),
 				location.getY() + 13 + graphics.getFontMetrics().getHeight() * i);
 
+			tooltipText += String.format("%s <col=ffff00>%s</col>", amount, runeImageCache.getName(runeId));
+			tooltipText += "</br>";
+
 			if (!config.showIcons())
 			{
 				continue;
 			}
-
-			int runeId = client.getSetting(runeVarbit);
 
 			BufferedImage runeImg = runeImageCache.getImage(runeId);
 			if (runeImg != null)
@@ -135,6 +135,12 @@ public class RunepouchOverlay extends Overlay
 					new Point(location.getX(), location.getY() + 2 + (graphics.getFontMetrics().getHeight()) * i),
 					runeImg);
 			}
+		}
+
+		if (runePouch.getCanvasBounds().contains(client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY()))
+		{
+			tooltip.setText(tooltipText);
+			runelite.getTooltipRenderer().add(tooltip);
 		}
 		return null;
 	}
