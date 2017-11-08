@@ -55,6 +55,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Query;
 import net.runelite.client.account.AccountSession;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.config.RuneliteConfig;
 import net.runelite.client.events.SessionClose;
 import net.runelite.client.events.SessionOpen;
 import net.runelite.client.game.ItemManager;
@@ -87,6 +88,7 @@ public class RuneLite
 
 	private final RuneliteProperties properties = new RuneliteProperties();
 	private ClientUI gui;
+	private RuneliteConfig config;
 	private PluginManager pluginManager;
 	private final MenuManager menuManager = new MenuManager(this);
 	private OverlayRenderer overlayRenderer;
@@ -153,6 +155,8 @@ public class RuneLite
 		});
 
 		configManager.load();
+
+		config = configManager.getConfig(RuneliteConfig.class);
 
 		eventBus.register(menuManager);
 
@@ -431,6 +435,10 @@ public class RuneLite
 	public ConfigManager getConfigManager()
 	{
 		return configManager;
+	}
+
+	public RuneliteConfig getConfig() {
+		return config;
 	}
 
 	public ItemManager getItemManager()

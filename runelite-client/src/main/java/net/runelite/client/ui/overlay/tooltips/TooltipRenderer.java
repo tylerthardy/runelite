@@ -27,6 +27,7 @@ package net.runelite.client.ui.overlay.tooltips;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.client.RuneLite;
+import net.runelite.client.config.RuneliteConfig;
 import net.runelite.client.ui.overlay.Renderer;
 
 import java.awt.Color;
@@ -41,6 +42,7 @@ import java.util.regex.Pattern;
 public class TooltipRenderer implements Renderer
 {
 	private final Client client = RuneLite.getClient();
+	private final RuneliteConfig config = RuneLite.getRunelite().getConfig();
 
 	private final int BORDER_SIZE = 2;
 	private final int JSWING_BORDER_RIGHT = 5;
@@ -51,8 +53,6 @@ public class TooltipRenderer implements Renderer
 	private static final String colorSplit = "<\\/?col=?([^>]+)?>";
 
 	private Tooltip tooltip;
-
-	private boolean leftSide = false;
 
 	@Override
 	public void render(BufferedImage clientBuffer)
@@ -105,7 +105,7 @@ public class TooltipRenderer implements Renderer
 		}
 
 		// Position tooltip
-		if (leftSide)
+		if (config.tooltipLeft())
 		{
 			x = x - tooltipWidth;
 			if (x < 0)
