@@ -42,6 +42,22 @@ public class HerbiboarOverlay extends Overlay
 
 	private static final int REGION_SIZE = 104;
 	private static final int MAX_DISTANCE = 2400;
+	private final Color[] colorSteps = {
+			Color.RED,
+			Color.ORANGE,
+			Color.YELLOW,
+			Color.GREEN,
+			Color.BLUE,
+			Color.MAGENTA,
+			Color.PINK,
+			Color.WHITE,
+			Color.BLACK
+	};
+
+	private int trailStep = 0;
+	private boolean trailStarted = false;
+	private HashMap<Point,Integer> trailTiles = new HashMap<Point,Integer>();
+
 
 	@Inject
 	public HerbiboarOverlay(RuneLite runelite) //, HerbiboarConfig config)
@@ -90,29 +106,16 @@ public class HerbiboarOverlay extends Overlay
 		return null;
 	}
 
-	private int trailStep = 0;
-	private HashMap<Point,Integer> trailTiles = new HashMap<Point,Integer>();
-	private Color[] colorSteps = {
-			Color.RED,
-			Color.ORANGE,
-			Color.YELLOW,
-			Color.GREEN,
-			Color.BLUE,
-			Color.MAGENTA,
-			Color.PINK,
-			Color.WHITE,
-			Color.BLACK
-	};
-
 	public void newTrail()
 	{
-
+		trailStarted = true;
 	}
 
 	public void endTrail()
 	{
 		trailTiles.clear();
 		trailStep = 0;
+		trailStarted = false;
 	}
 
 	public void nextTrailStep()
@@ -123,6 +126,11 @@ public class HerbiboarOverlay extends Overlay
 
 	private void renderTileObjects(Graphics2D graphics)
 	{
+		if (!trailStarted)
+		{
+			return;
+		}
+
 		Region region = client.getRegion();
 		Tile[][][] tiles = region.getTiles();
 
@@ -132,41 +140,44 @@ public class HerbiboarOverlay extends Overlay
 			for (int y = 0; y < REGION_SIZE; ++y)
 			{
 				Tile tile = tiles[z][x][y];
-
-				if (tile != null)
+				Player player = client.getLocalPlayer();
+				if (tile == null || player == null)
 				{
-					Player player = client.getLocalPlayer();
-					if (player != null)
-					{
-						GroundObject groundObject = tile.getGroundObject();
-						if (groundObject != null)
-						{
-							if (player.getLocalLocation().distanceTo(groundObject.getLocalLocation()) <= MAX_DISTANCE)
-							{
-								int id = groundObject.getId();
-								if (id >= 31300 && id <= 31399)
-								{
-									Renderable renderable = groundObject.getRenderable();
-									if (renderable.getModel() != null)
-									{
-										Color color = colorSteps[trailStep];
-										Point loc = groundObject.getWorldLocation();
-										if (trailTiles.containsKey(loc))
-										{
-											int colorStep = trailTiles.get(loc);
-											color = colorSteps[colorStep];
-										}
-										else
-										{
-											trailTiles.put(loc, trailStep);
-										}
+					continue;
+				}
 
-										OverlayUtil.renderTileOverlay(graphics, groundObject, "ID:" + groundObject.getId(), color);
-									}
-								}
-							}
-						}
+				GroundObject groundObject = tile.getGroundObject();
+				if (groundObject == null)
+				{
+					continue;
+				}
+
+				if (player.getLocalLocation().distanceTo(groundObject.getLocalLocation()) > MAX_DISTANCE)
+				{
+					continue;
+				}
+
+				int id = groundObject.getId();
+				if (id >= 31300 && id <= 31399)
+				{
+					Renderable renderable = groundObject.getRenderable();
+					if (renderable.getModel() == null)
+					{
+						continue;
 					}
+					Color color = colorSteps[trailStep];
+					Point loc = groundObject.getWorldLocation();
+					if (trailTiles.containsKey(loc))
+					{
+						int colorStep = trailTiles.get(loc);
+						color = colorSteps[colorStep];
+					}
+					else
+					{
+						trailTiles.put(loc, trailStep);
+					}
+
+					OverlayUtil.renderTileOverlay(graphics, groundObject, "ID:" + groundObject.getId() + ":" + loc, color);
 				}
 			}
 		}
