@@ -30,6 +30,7 @@ import java.util.HashMap;
 import com.google.inject.Inject;
 import net.runelite.api.*;
 import net.runelite.api.Point;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.RuneLite;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -130,6 +131,7 @@ public class HerbiboarOverlay extends Overlay
 		{
 			return;
 		}
+		//Add object query for objects in mushroom forest to cut down on this method
 
 		Region region = client.getRegion();
 		Tile[][][] tiles = region.getTiles();
@@ -181,5 +183,5 @@ public class HerbiboarOverlay extends Overlay
 				}
 			}
 		}
-	} //wee
+	}
 }

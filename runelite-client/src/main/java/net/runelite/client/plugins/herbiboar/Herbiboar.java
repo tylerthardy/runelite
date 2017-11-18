@@ -27,9 +27,11 @@ package net.runelite.client.plugins.herbiboar;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import net.runelite.client.events.ChatMessage;
+import net.runelite.client.events.ExperienceChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;
+import static net.runelite.api.Skill.HUNTER;
 
 @PluginDescriptor(
 		name = "Herbiboar plugin"
@@ -74,11 +76,30 @@ public class Herbiboar extends Plugin
 		{
 			//Find next
 			overlay.nextTrailStep();
+			System.out.println("chat msg");
 		}
 		else if (message.contains("You stun the creature") || event.getMessage().contains("The creature has successfully"))
 		{
 			overlay.endTrail();
 			//color = new Color((int)(Math.random()*0x1000000));
 		}
+	}
+
+	@Subscribe
+	public void onExperienceChanged(ExperienceChanged event)
+	{
+		if (event.getSkill() != HUNTER) //config
+		{
+			return;
+		}
+
+		/*if (cachedXp == 0)
+		{
+			// this is the initial xp sent on login
+			cachedXp = client.getSkillExperience(SLAYER);
+			return;
+		}*/
+
+		System.out.println("xp drop");
 	}
 }
