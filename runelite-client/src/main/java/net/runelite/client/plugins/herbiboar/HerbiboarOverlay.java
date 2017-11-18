@@ -27,6 +27,8 @@ package net.runelite.client.plugins.herbiboar;
 import java.awt.*;
 import java.util.HashMap;
 
+import com.google.inject.Inject;
+import com.sun.istack.internal.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.Point;
 import net.runelite.client.RuneLite;
@@ -36,16 +38,19 @@ import net.runelite.client.ui.overlay.OverlayUtil;
 
 public class HerbiboarOverlay extends Overlay
 {
-	private final Herbiboar plugin;
-	private final Client client = RuneLite.getClient();
+	private final Client client;
+	private final RuneLite runelite;
 
 	private static final int REGION_SIZE = 104;
 	private static final int MAX_DISTANCE = 2400;
 
-	public HerbiboarOverlay(Herbiboar plugin)
+	@Inject
+	public HerbiboarOverlay(RuneLite runelite, @Nullable Client client) //, HerbiboarConfig config)
 	{
 		super(OverlayPosition.DYNAMIC);
-		this.plugin = plugin;
+		this.runelite = runelite;
+		this.client = client;
+		//this.config = config;
 	}
 
 	@Override

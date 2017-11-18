@@ -25,6 +25,7 @@
 package net.runelite.client.plugins.herbiboar;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -35,7 +36,8 @@ import net.runelite.client.ui.overlay.Overlay;
 )
 public class Herbiboar extends Plugin
 {
-	private final HerbiboarOverlay overlay = new HerbiboarOverlay(this);
+	@Inject
+	HerbiboarOverlay overlay;
 
 	@Override
 	protected void startUp() throws Exception
