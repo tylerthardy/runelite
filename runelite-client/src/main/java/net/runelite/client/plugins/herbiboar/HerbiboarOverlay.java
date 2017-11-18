@@ -28,7 +28,6 @@ import java.awt.*;
 import java.util.HashMap;
 
 import com.google.inject.Inject;
-import com.sun.istack.internal.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.Point;
 import net.runelite.client.RuneLite;
@@ -45,13 +44,31 @@ public class HerbiboarOverlay extends Overlay
 	private static final int MAX_DISTANCE = 2400;
 
 	@Inject
-	public HerbiboarOverlay(RuneLite runelite, @Nullable Client client) //, HerbiboarConfig config)
+	public HerbiboarOverlay(RuneLite runelite) //, HerbiboarConfig config)
 	{
 		super(OverlayPosition.DYNAMIC);
 		this.runelite = runelite;
-		this.client = client;
+		this.client = runelite.getClient();
 		//this.config = config;
 	}
+
+/*
+	BANNED PLAYERS AKA NOTES
+	----------------------
+
+	get ids for all of the starting objects
+	final path does not give xp drop
+
+
+	tunnel is 30532
+	tunnel can be game object or ground object
+
+	rocks (start) 30519
+	mushroom (start) 30520
+	rock (start) 30521
+	driftwood (start) 30523
+
+*/
 
 	@Override
 	public Dimension render(Graphics2D graphics)
