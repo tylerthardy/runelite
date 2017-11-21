@@ -66,8 +66,9 @@ public class HerbiboarOverlay extends Overlay
 
 
 	private int trailStep = 0;
+	private Point trailEnd = null;
 	private boolean trailStarted = false;
-	private HashMap<Point,Integer> trailTiles = new HashMap<Point,Integer>();
+	private HashMap<Tile, Integer> trailTiles = new HashMap<Tile, Integer>();
 
 
 	@Inject
@@ -112,6 +113,7 @@ public class HerbiboarOverlay extends Overlay
 		}*/
 		Region region = client.getRegion();
 		Tile[][][] tiles = region.getTiles();
+		Tile closestTile;
 
 		int z = client.getPlane();
 		for (int x = 0; x < REGION_SIZE; ++x)
@@ -143,6 +145,14 @@ public class HerbiboarOverlay extends Overlay
 				}
 				else
 				{
+					Point tileWorldLoc = Perspective.localToWorld(client, new Point(x, y));
+					if (trailEnd != null && tileWorldLoc.distanceTo(trailEnd) < 3)
+					{
+						//highlighting objs for next step
+						//or highlight the tunnel if it's the end (known by xp drop)
+						//OverlayUtil.renderTileOverlay(graphics, tile., tileWorldLoc.toString(), Color.red);
+					}
+
 					GroundObject groundObject = tile.getGroundObject();
 					if (groundObject == null)
 					{
@@ -164,14 +174,16 @@ public class HerbiboarOverlay extends Overlay
 						}
 						Color color = colorSteps[trailStep];
 						Point loc = groundObject.getWorldLocation();
-						if (trailTiles.containsKey(loc))
+						if (trailTiles.containsKey(tile))
 						{
-							int colorStep = trailTiles.get(loc);
+							int colorStep = trailTiles.get(tile);
 							color = colorSteps[colorStep];
 						}
 						else
 						{
-							trailTiles.put(loc, trailStep);
+							trailTiles.put(tile, trailStep);
+							HerbiboarTrail trail = HerbiboarTrail.getTrail(loc);
+							trailEnd = trail.getOtherEnd(loc);
 						}
 
 						OverlayUtil.renderTileOverlay(graphics, groundObject, "ID:" + groundObject.getId() + ":" + loc, color);

@@ -51,7 +51,7 @@ public enum HerbiboarTrail
 	//</editor-fold>
 
 	private static final Logger logger = LoggerFactory.getLogger(HerbiboarTrail.class);
-	private static final Map<Integer, HerbiboarTrail> tileIds = new HashMap<>();
+	private static final Map<Point, HerbiboarTrail> tileEnds = new HashMap<>();
 
 	private final int tileId1;
 	private final int tileId2;
@@ -62,8 +62,8 @@ public enum HerbiboarTrail
 	{
 		for (HerbiboarTrail trail : values())
 		{
-			tileIds.put(trail.getTileId1(), trail);
-			tileIds.put(trail.getTileId2(), trail);
+			tileEnds.put(trail.getEnd1(), trail);
+			tileEnds.put(trail.getEnd2(), trail);
 		}
 	}
 
@@ -75,9 +75,14 @@ public enum HerbiboarTrail
 		this.end2 = end2;
 	}
 
-	public static HerbiboarTrail getTrail(int tileId)
+	public static HerbiboarTrail getTrail(Point loc)
 	{
-		return tileIds.get(tileId);
+		return tileEnds.get(loc);
+	}
+
+	public Point getOtherEnd(Point loc)
+	{
+		return loc.equals(getEnd1()) ? getEnd2() : getEnd1();
 	}
 
 	public int getTileId1()

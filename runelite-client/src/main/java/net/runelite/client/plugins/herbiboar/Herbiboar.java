@@ -67,6 +67,7 @@ public class Herbiboar extends Plugin
 		{
 			//Start
 			overlay.newTrail();
+			System.out.println("chat msg");
 		}
 		else if (message.contains("Nothing seems to be out of place here."))
 		{
