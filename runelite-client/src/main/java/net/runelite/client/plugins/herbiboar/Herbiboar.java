@@ -25,12 +25,24 @@
 package net.runelite.client.plugins.herbiboar;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import net.runelite.api.Client;
+import net.runelite.api.Varbits;
 import net.runelite.client.events.ChatMessage;
 import net.runelite.client.events.ExperienceChanged;
+import net.runelite.client.events.GameStateChanged;
+import net.runelite.client.events.MenuOptionClicked;
+import net.runelite.client.events.VarbitChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+import java.util.Arrays;
+
 import static net.runelite.api.Skill.HUNTER;
 
 @PluginDescriptor(
@@ -38,8 +50,14 @@ import static net.runelite.api.Skill.HUNTER;
 )
 public class Herbiboar extends Plugin
 {
+	private static final Logger logger = LoggerFactory.getLogger(Herbiboar.class);
+
 	@Inject
 	HerbiboarOverlay overlay;
+
+	@Inject
+	@Nullable
+	Client client;
 
 	@Override
 	protected void startUp() throws Exception
@@ -67,7 +85,6 @@ public class Herbiboar extends Plugin
 		{
 			//Start
 			overlay.newTrail();
-			System.out.println("chat msg");
 		}
 		else if (message.contains("Nothing seems to be out of place here."))
 		{
@@ -77,7 +94,6 @@ public class Herbiboar extends Plugin
 		{
 			//Find next
 			overlay.nextTrailStep();
-			System.out.println("chat msg");
 		}
 		else if (message.contains("You stun the creature") || event.getMessage().contains("The creature has successfully"))
 		{
@@ -101,6 +117,48 @@ public class Herbiboar extends Plugin
 			return;
 		}*/
 
-		System.out.println("xp drop");
+	}
+
+	@Subscribe
+	public void onGameStateChange(GameStateChanged event)
+	{
+		switch (event.getGameState())
+		{
+			case HOPPING:
+			case LOGGING_IN:
+				overlay.endTrail();
+				System.out.println("CLEARED");
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Subscribe
+	public void menuOptionClick(MenuOptionClicked menuOptionClicked)
+	{
+		if (menuOptionClicked.getId() > 0 && !menuOptionClicked.getMenuTarget().isEmpty() && !menuOptionClicked.getMenuTarget().equals(""))
+			System.out.println(String.format("%s -> %s (%s)", menuOptionClicked.getMenuAction(), menuOptionClicked.getMenuTarget(), menuOptionClicked.getMenuTarget()));
+	}
+
+	private static String prettyPrintInt(int value)
+	{
+		String s = Integer.toBinaryString(value);
+		while (s.length() < 32)
+		{
+			s = "0" + s;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 32; i += 8)
+		{
+			String substr = s.substring(i, i + 8);
+			if (i > 0)
+			{
+				sb.append(' ');
+			}
+			sb.append(substr);
+		}
+		return sb.toString();
 	}
 }
