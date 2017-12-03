@@ -24,45 +24,47 @@
  */
 package net.runelite.client.plugins.herbiboars;
 
+import net.runelite.api.Point;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public enum HerbiboarTrail
 {
-	TRAIL_31303(31303, -999, 30),
-	TRAIL_31306(31306, -999, 7),
-	TRAIL_31309(31309, -999, -999),
-	TRAIL_31312(31312, 20, 21),
-	TRAIL_31315(31315, 20, 14),
-	TRAIL_31318(31318, 18, 14),
-	TRAIL_31321(31321, 18, 33),
-	TRAIL_31324(31324, 32, 8),
-	TRAIL_31327(31327, 32, 25),
-	TRAIL_31330(31330, 28, 13),
-	TRAIL_31333(31333, -999, 17),
-	TRAIL_31336(31336, 14, -999),
-	TRAIL_31339(31339, 14, 21),
-	TRAIL_31342(31342, 15, 32),
-	TRAIL_31345(31345, 15, 8),
-	TRAIL_31348(31348, 9, -999),
-	TRAIL_31351(31351, 9, -999),
-	TRAIL_31354(31354, 17, -999),
-	TRAIL_31357(31357, 2, 34),
-	TRAIL_31360(31360, 2, -999),
-	TRAIL_31363(31363, 13, -999),
-	TRAIL_31366(31366, -999, -999),
-	TRAIL_31369(31369, -999, -999),
-	TRAIL_31372(31372, 34, -999);
+	TRAIL_31303(31303, null, new Point(3697, 3875)),
+	TRAIL_31306(31306, null, new Point(3672, 3890)),
+	TRAIL_31309(31309, null, null),
+	TRAIL_31312(31312, new Point(3699, 3875), new Point(3710, 3877)),
+	TRAIL_31315(31315, new Point(3699, 3875), new Point(3728, 3893)),
+	TRAIL_31318(31318, new Point(3670, 3889), new Point(3728, 3893)),
+	TRAIL_31321(31321, new Point(3670, 3889), new Point(3667, 3862)),
+	TRAIL_31324(31324, new Point(3681, 3860), new Point(3680, 3836)),
+	TRAIL_31327(31327, new Point(3681, 3860), new Point(3698, 3847)),
+	TRAIL_31330(31330, new Point(3708, 3876), new Point(3713, 3850)),
+	TRAIL_31333(31333, null, new Point(3694, 3847)),
+	TRAIL_31336(31336, new Point(3728, 3893), null),
+	TRAIL_31339(31339, new Point(3728, 3893), new Point(3710, 3877)),
+	TRAIL_31342(31342, new Point(3668, 3865), new Point(3681, 3860)),
+	TRAIL_31345(31345, new Point(3668, 3865), new Point(3680, 3836)),
+	TRAIL_31348(31348, new Point(3680, 3838), null),
+	TRAIL_31351(31351, new Point(3680, 3838), null),
+	TRAIL_31354(31354, new Point(3694, 3847), null),
+	TRAIL_31357(31357, new Point(3715, 3851), new Point(3713, 3840)),
+	TRAIL_31360(31360, new Point(3715, 3851), null),
+	TRAIL_31363(31363, new Point(3713, 3850), null),
+	TRAIL_31366(31366, null, null),
+	TRAIL_31369(31369, null, null),
+	TRAIL_31372(31372, new Point(3713, 3840), null);
 	
 	private final int trailId;
-	private final int objectId1;
-	private final int objectId2;
+	private final Point objectLoc1;
+	private final Point objectLoc2;
 
-	HerbiboarTrail(int trailId, int objectId1, int objectId2)
+	HerbiboarTrail(int trailId, Point objectLoc1, Point objectLoc2)
 	{
 		this.trailId = trailId;
-		this.objectId1 = objectId1;
-		this.objectId2 = objectId2;
+		this.objectLoc1 = objectLoc1;
+		this.objectLoc2 = objectLoc2;
 	}
 
 	public int getTrailId()
@@ -70,17 +72,17 @@ public enum HerbiboarTrail
 		return this.trailId;
 	}
 
-	public int getObjectId(int varbitValue)
+	public Point getObjectLoc(int varbitValue)
 	{
 		switch (varbitValue)
 		{
 			case 1:
-				return objectId1;
+				return objectLoc1;
 			case 2:
-				return objectId2;
+				return objectLoc2;
 			case 0:
 			default:
-				return -1;
+				return null;
 		}
 	}
 
