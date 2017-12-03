@@ -66,7 +66,9 @@ public enum HerbiboarObject
 	Object_30(30545, new Point(3697, 3875)),
 	Object_31(30532, new Point(3751, 3849)),
 	Object_32(30535, new Point(3681, 3860)),
-	Object_33(30549, new Point(3667, 3862));
+	Object_33(30549, new Point(3667, 3862)),
+	Object_34(31480, new Point(3713, 3840)),
+	Object_35(31479, new Point(3706, 3811));
 	//</editor-fold>
 
 	private static final Logger logger = LoggerFactory.getLogger(HerbiboarTrail.class);
