@@ -60,7 +60,8 @@ public class HerbiboarOverlay extends Overlay
 			Color.MAGENTA,
 			Color.PINK,
 			Color.WHITE,
-			Color.BLACK
+			Color.BLACK,
+			Color.GRAY
 	};
 	private final ArrayList<Integer> startObjectIds = new ArrayList<Integer>(Arrays.asList(
 			30519,
@@ -182,7 +183,7 @@ public class HerbiboarOverlay extends Overlay
 							HerbiboarObject ho = HerbiboarObject.getObject(loc);
 							if (ho != null)
 							{
-								OverlayUtil.renderTileOverlay(graphics, go, "" + ho.getName(), Color.pink);
+								OverlayUtil.renderTileOverlay(graphics, go, "" + ho.getName() + loc, Color.pink);
 							}
 							/*if (id >= 30400 && id <= 30600)
 							{
