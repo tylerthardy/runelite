@@ -77,7 +77,6 @@ public class Herbiboars extends Plugin
 		if (message.contains("You stun the creature") || event.getMessage().contains("The creature has successfully"))
 		{
 			overlay.endTrail();
-			//color = new Color((int)(Math.random()*0x1000000));
 		}
 	}
 
@@ -89,7 +88,6 @@ public class Herbiboars extends Plugin
 			case HOPPING:
 			case LOGGING_IN:
 				overlay.endTrail();
-				System.out.println("CLEARED");
 				break;
 			default:
 				break;

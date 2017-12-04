@@ -27,16 +27,13 @@ package net.runelite.client.plugins.herbiboars;
 import com.google.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
 import net.runelite.api.GroundObject;
 import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.api.Region;
-import net.runelite.api.Renderable;
 import net.runelite.api.Tile;
 import net.runelite.api.Varbits;
 import net.runelite.client.RuneLite;
-import net.runelite.client.plugins.herbiboar.HerbiboarObject;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
@@ -149,7 +146,6 @@ public class HerbiboarsOverlay extends Overlay
 			int value =  client.getSetting(Varbits.valueOf("HB_TRAIL_" + trailId));
 			if (value > 0)
 			{
-				//System.out.println(trail.getTrailId() + ":" + value);
 				shownTrails.add(trail.getTrailId());
 				shownTrails.add(trail.getTrailId() + 1);
 			}
