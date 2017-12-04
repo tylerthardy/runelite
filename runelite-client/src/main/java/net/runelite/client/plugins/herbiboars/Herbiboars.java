@@ -24,7 +24,10 @@
  */
 package net.runelite.client.plugins.herbiboars;
 
+import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Client;
+import net.runelite.client.events.ChatMessage;
+import net.runelite.client.events.GameStateChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;
@@ -62,4 +65,35 @@ public class Herbiboars extends Plugin
 	{
 		return overlay;
 	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		String message = event.getMessage();
+
+		if (message == null)
+			return;
+
+		if (message.contains("You stun the creature") || event.getMessage().contains("The creature has successfully"))
+		{
+			overlay.endTrail();
+			//color = new Color((int)(Math.random()*0x1000000));
+		}
+	}
+
+	@Subscribe
+	public void onGameStateChange(GameStateChanged event)
+	{
+		switch (event.getGameState())
+		{
+			case HOPPING:
+			case LOGGING_IN:
+				overlay.endTrail();
+				System.out.println("CLEARED");
+				break;
+			default:
+				break;
+		}
+	}
+
 }
