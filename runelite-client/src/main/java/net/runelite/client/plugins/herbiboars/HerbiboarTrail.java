@@ -41,7 +41,7 @@ public enum HerbiboarTrail
 	TRAIL_31324(31324, new Point(3681, 3860), new Point(3680, 3836)),
 	TRAIL_31327(31327, new Point(3681, 3860), new Point(3698, 3847)),
 	TRAIL_31330(31330, new Point(3708, 3876), new Point(3713, 3850)),
-	TRAIL_31333(31333, new Point(3709, 3875), new Point(3694, 3847)),
+	TRAIL_31333(31333, new Point(3708, 3876), new Point(3694, 3847)),
 	TRAIL_31336(31336, new Point(3728, 3893), null),
 	TRAIL_31339(31339, new Point(3728, 3893), new Point(3710, 3877)),
 	TRAIL_31342(31342, new Point(3668, 3865), new Point(3681, 3860)),
