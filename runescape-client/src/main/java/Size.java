@@ -1,4 +1,5 @@
 import net.runelite.mapping.Export;
+import net.runelite.mapping.Hook;
 import net.runelite.mapping.Implements;
 import net.runelite.mapping.ObfuscatedGetter;
 import net.runelite.mapping.ObfuscatedName;
@@ -98,7 +99,9 @@ public class Size {
       signature = "(Lcp;I)V",
       garbageValue = "-1126597833"
    )
-   static void method176(World var0) {
+   @Export("setWorld")
+   @Hook("setWorldHook")
+   static void setWorld(World var0) {
       if(var0.method1518() != Client.isMembers) {
          Client.isMembers = var0.method1518();
          class94.method1760(var0.method1518());

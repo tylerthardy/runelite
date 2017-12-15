@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017, Tyler <https://github.com/tylerthardy>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,31 +22,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.rs.api;
+package net.runelite.api;
 
-import net.runelite.api.World;
-import net.runelite.mapping.Import;
-
-public interface RSWorld extends World
+public interface World
 {
-	@Import("mask")
-	int getMask();
-
-	@Import("playerCount")
 	int getPlayerCount();
 
-	@Import("location")
 	int getLocation();
 
-	@Import("index")
 	int getIndex();
 
-	@Import("id")
 	int getId();
 
-	@Import("activity")
 	String getActivity();
 
-	@Import("address")
 	String getAddress();
 }

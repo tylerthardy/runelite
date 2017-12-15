@@ -144,7 +144,7 @@ public class class25 {
 
          if(class91.field1326 != -1) {
             World var5 = ItemContainer.worldList[class91.field1326];
-            Size.method176(var5);
+            Size.setWorld(var5);
             class91.worldSelectShown = false;
             class91.field1315.method5203(class91.field1351, 0);
             class91.field1319.method5203(class91.field1351 + 382, 0);

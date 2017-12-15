@@ -338,6 +338,14 @@ public abstract class RSClientMixin implements RSClient
 		setRSModIcons((RSIndexedSprite[]) modIcons);
 	}
 
+	@Inject
+	@Override
+	public void setWorld(int world)
+	{
+		System.out.println("World set to: " + world);
+		setRSWorld(world);
+	}
+
 	@FieldHook("skillExperiences")
 	@Inject
 	public static void experiencedChanged(int idx)

@@ -62,6 +62,10 @@ public interface Client
 
 	int getCameraYaw();
 
+	int getWorld();
+
+	void setWorld(int world);
+
 	int getViewportHeight();
 
 	int getViewportWidth();
@@ -147,6 +151,8 @@ public interface Client
 	Map<Integer, ChatLineBuffer> getChatLineMap();
 
 	Widget getViewportWidget();
+
+	World[] getWorldList();
 
 	ObjectComposition getObjectDefinition(int objectId);
 
