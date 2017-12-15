@@ -100,6 +100,8 @@ public interface Client
 
 	int[] getWidgetPositionsY();
 
+	HashTable getItemContainers();
+
 	String[] getPlayerOptions();
 
 	boolean[] getPlayerOptionsPriorities();

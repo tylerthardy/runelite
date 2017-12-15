@@ -237,6 +237,7 @@ public interface RSClient extends RSGameEngine, Client
 	int[] getWidgetPositionsY();
 
 	@Import("itemContainers")
+	@Override
 	RSHashTable getItemContainers();
 
 	@Import("getItemDefinition")
