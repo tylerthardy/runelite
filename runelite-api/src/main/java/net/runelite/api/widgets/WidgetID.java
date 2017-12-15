@@ -50,6 +50,24 @@ class WidgetID
 	static final int WORLD_MAP_MENU_GROUP_ID = 160;
 	static final int VOLCANIC_MINE_GROUP_ID = 611;
 
+	static class Buttons
+	{
+		static final int COMBAT = 51;
+		static final int STATS = 52;
+		static final int LOG = 53;
+		static final int BAG = 54;
+		static final int EQUIPMENT = 55;
+		static final int PRAYER = 56;
+		static final int MAGIC = 57;
+		static final int CLAN = 35;
+		static final int FRIENDS = 36;
+		static final int IGNORE = 37;
+		static final int LOGOUT = 38;
+		static final int SETTINGS = 39;
+		static final int EMOTES = 40;
+		static final int MUSIC = 41;
+	}
+
 	static class WorldMap
 	{
 		static final int OPTION = 29;
