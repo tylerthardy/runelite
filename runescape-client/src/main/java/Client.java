@@ -5359,7 +5359,7 @@ public final class Client extends GameEngine {
                Friend.setGameState(45);
                var2.vmethod3081();
                var2 = null;
-               Size.method176(var60);
+               Size.setWorld(var60);
                var1.serverPacket = null;
                return false;
             }

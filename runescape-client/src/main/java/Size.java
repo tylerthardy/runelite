@@ -98,7 +98,8 @@ public class Size {
       signature = "(Lcp;I)V",
       garbageValue = "-1126597833"
    )
-   static void method176(World var0) {
+   @Export("setWorld")
+   static void setWorld(World var0) {
       if(var0.method1518() != Client.isMembers) {
          Client.isMembers = var0.method1518();
          class94.method1760(var0.method1518());
