@@ -26,6 +26,7 @@ package net.runelite.rs.api;
 
 import java.util.Map;
 import net.runelite.api.Client;
+import net.runelite.api.World;
 import net.runelite.mapping.Construct;
 import net.runelite.mapping.Import;
 
@@ -57,6 +58,9 @@ public interface RSClient extends RSGameEngine, Client
 
 	@Import("world")
 	int getWorld();
+
+	@Import("setWorld")
+	void setWorld(World world);
 
 	@Import("FPS")
 	@Override

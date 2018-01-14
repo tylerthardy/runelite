@@ -50,6 +50,8 @@ public interface Client
 
 	Canvas getCanvas();
 
+	void setWorld(World world);
+
 	int getFPS();
 
 	int getCameraX();
