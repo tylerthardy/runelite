@@ -150,6 +150,8 @@ public interface Client
 
 	Widget getViewportWidget();
 
+	World[] getWorldList();
+
 	ObjectComposition getObjectDefinition(int objectId);
 
 	Area[] getMapAreas();
