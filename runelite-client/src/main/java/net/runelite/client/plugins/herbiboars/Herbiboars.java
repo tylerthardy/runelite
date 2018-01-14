@@ -26,8 +26,8 @@ package net.runelite.client.plugins.herbiboars;
 
 import com.google.common.eventbus.Subscribe;
 import net.runelite.api.Client;
-import net.runelite.client.events.ChatMessage;
-import net.runelite.client.events.GameStateChanged;
+import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;

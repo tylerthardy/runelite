@@ -50,7 +50,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class HerbiboarsOverlay extends Overlay
+class HerbiboarsOverlay extends Overlay
 {
 	private static final Logger logger = LoggerFactory.getLogger(HerbiboarsOverlay.class);
 
@@ -90,11 +90,11 @@ public class HerbiboarsOverlay extends Overlay
 	};
 
 	@Inject
-	public HerbiboarsOverlay(RuneLite runelite) //, HerbiboarConfig config)
+	public HerbiboarsOverlay(RuneLite runelite, Client client) //, HerbiboarConfig config)
 	{
-		super(OverlayPosition.DYNAMIC);
+		setPosition(OverlayPosition.DYNAMIC);
 		this.runelite = runelite;
-		this.client = runelite.getClient();
+		this.client = client;
 		//this.config = config;
 	}
 
@@ -135,7 +135,7 @@ public class HerbiboarsOverlay extends Overlay
 	private int currentPath;
 
 	@Override
-	public Dimension render(Graphics2D graphics)
+	public Dimension render(Graphics2D graphics, java.awt.Point parent)
 	{
 		startText(X_START, Y_START);
 		drawLine(graphics, client.getLocalPlayer().getWorldLocation().toString(),Color.WHITE);

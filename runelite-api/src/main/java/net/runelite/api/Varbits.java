@@ -191,9 +191,7 @@ public enum Varbits
 	HB_TRAIL_31372(1619, 9, 11),
 
 	HB_FINISH(1620, 27, 30),
-	HB_STARTED(1618, 31, 31) //not working
-	;
-	SIDE_PANELS(4607, 1055, 8, 8),
+	HB_STARTED(1618, 31, 31), //not working
 
 	/**
 	 * Barbarian Assault
