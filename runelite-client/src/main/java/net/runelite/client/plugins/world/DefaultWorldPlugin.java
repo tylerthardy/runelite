@@ -37,6 +37,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.combatlevel.CombatLevelConfig;
 import net.runelite.client.task.Schedule;
+import net.runelite.http.api.worlds.WorldClient;
+import net.runelite.http.api.worlds.WorldResult;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -67,16 +69,24 @@ public class DefaultWorldPlugin extends Plugin
 		if(worlds != null)
 		{
 			System.out.println("SETTING WORLD");
-			world.setId(308);
+			WorldClient wc = new WorldClient();
+			try
+			{
+				WorldResult wr = wc.lookupWorlds();
+				wr.findWorld(308);
+				System.out.println(wr.findWorld(308).getActivity());
+			}
+			catch(Exception ex)
+			{
+				System.out.println(ex);
+			}
+
 			client.setWorld(worlds[7]);
+			for(World w : worlds)
+			{
+				System.out.println(w.getId() +  ","+w.getMask());
+			}
 		}
 
-		/*for(World w : client.getWorldList())
-		{
-			System.out.println(w.getId() +  ","+w.getActivity()+","+w.getAddress());
-			System.out.println(w.getIndex());
-			System.out.println(w.getLocation());
-			System.out.println(w.getPlayerCount());
-		}*/
 	}
 }
