@@ -37,6 +37,7 @@ import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
 import net.runelite.api.Varbits;
+import net.runelite.api.World;
 import net.runelite.api.mixins.FieldHook;
 import net.runelite.api.mixins.Inject;
 import net.runelite.api.mixins.Mixin;
@@ -340,10 +341,27 @@ public abstract class RSClientMixin implements RSClient
 
 	@Inject
 	@Override
-	public void setWorld(int world)
+	public void setWorld(World world)
 	{
 		System.out.println("World set to: " + world);
-		setRSWorld(world);
+
+		int id = world.getId();
+		int socketType = client.getSocketType();
+		int port1 = socketType == 0?43594:id + 40000;
+
+		setWorldId(id);
+		setWorldAddress(world.getAddress());
+		setWorldFlags(world.getMask());
+		setPort1(port1);
+		setPort2(socketType == 0?443:id + 50000);
+		setMyWorldPort(port1);
+
+		/*class11.host = var0.address;
+		Client.world = var0.id;
+		Client.flags = var0.mask;
+		GraphicsObject.port1 = Client.socketType == 0?43594:var0.id + 40000;
+		FileOnDisk.port2 = Client.socketType == 0?443:var0.id + 50000;
+		class268.myWorldPort = GraphicsObject.port1;*/
 	}
 
 	@FieldHook("skillExperiences")

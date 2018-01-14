@@ -60,7 +60,25 @@ public interface RSClient extends RSGameEngine, Client
 	int getWorld();
 
 	@Import("world")
-	void setRSWorld(int world);
+	void setWorldId(int world);
+
+	@Import("host")
+	void setWorldAddress(String address);
+
+	@Import("flags")
+	void setWorldFlags(int flags);
+
+	@Import("port1")
+	void setPort1(int port);
+
+	@Import("port2")
+	void setPort2(int port);
+
+	@Import("myWorldPort")
+	void setMyWorldPort(int port);
+
+	@Import("socketType")
+	int getSocketType();
 
 	@Import("FPS")
 	@Override

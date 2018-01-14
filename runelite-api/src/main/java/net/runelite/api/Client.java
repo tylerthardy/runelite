@@ -64,7 +64,9 @@ public interface Client
 
 	int getWorld();
 
-	void setWorld(int world);
+	void setWorld(World world);
+
+	int getSocketType();
 
 	int getViewportHeight();
 

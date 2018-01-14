@@ -26,6 +26,8 @@ package net.runelite.api;
 
 public interface World
 {
+	int getMask();
+
 	int getPlayerCount();
 
 	int getLocation();

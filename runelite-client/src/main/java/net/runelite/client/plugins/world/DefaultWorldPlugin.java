@@ -63,13 +63,18 @@ public class DefaultWorldPlugin extends Plugin
 			return;
 		}
 
-		client.setWorld(308);
-		for(World w : client.getWorldList())
+		World[] worlds = client.getWorldList();
+		if(worlds != null)
+		{
+			client.setWorld(worlds[7]);
+		}
+
+		/*for(World w : client.getWorldList())
 		{
 			System.out.println(w.getId() +  ","+w.getActivity()+","+w.getAddress());
 			System.out.println(w.getIndex());
 			System.out.println(w.getLocation());
 			System.out.println(w.getPlayerCount());
-		}
+		}*/
 	}
 }
