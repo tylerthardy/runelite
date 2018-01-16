@@ -103,32 +103,30 @@ public enum MenuAction
 	USE_ON_ITEM_INV(31),
 	
 	/**
-	 * Menu action triggered when laying a trap that is in your inventory.
+	 * Menu action for first item action slot
 	 */
-	LAY_INV(33),
-	
+	ITEM_ACTION_1(33),
+
 	/**
-	 * Menu action triggered when cleaning a herb.
+	 * Menu action for second item action slot
 	 */
-	CLEAN(33),
-	
+	ITEM_ACTION_2(34),
+
 	/**
-	 * Menu action triggered when clicking on a wieldable item in your
-	 * inventory.
+	 * Menu action for third item action slot
 	 */
-	WIELD(34),
-	
+	ITEM_ACTION_3(35),
+
 	/**
-	 * Menu action triggered when clicking on a wieldable item in your
-	 * inventory.
+	 * Menu action for fourth item action slot
 	 */
-	WEAR(34),
-	
+	ITEM_ACTION_4(36),
+
 	/**
-	 * Menu action triggered when dropping an item from your inventory.
+	 * Menu action for fifth item action slot
 	 */
-	DROP(37),
-	
+	ITEM_ACTION_5(37),
+
 	/**
 	 * Menu action triggered clicking on an item in your inventory to "Use"
 	 * it, and select it to use it on something else.
