@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017, Aria <aria@ar1as.space>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,9 +22,37 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api;
+package net.runelite.client.plugins.gargaoe;
 
-public interface GroundObject extends TileObject
+import com.google.inject.Binder;
+import net.runelite.client.config.ConfigManager;
+import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.Overlay;
+
+import javax.inject.Inject;
+
+@PluginDescriptor(
+	name = "garg aoe plugin"
+)
+public class GargAoePlugin extends Plugin
 {
-	Renderable getRenderable();
+	@Inject
+	ConfigManager configManager;
+
+	@Inject
+	GargAoeOverlay overlay;
+
+	@Override
+	public void configure(Binder binder)
+	{
+		binder.bind(GargAoeOverlay.class);
+	}
+
+	@Override
+	public Overlay getOverlay()
+	{
+		return overlay;
+	}
+
 }
