@@ -156,6 +156,10 @@ class HerbiboarsOverlay extends Overlay
 				currentPath = value;
 			}
 		}
+
+		drawLine(graphics, "finishId: "+finishId, Color.WHITE);
+
+		//Finish trail
 		if (finishId > 0 && currentTrail != null)
 		{
 			shownTrails.add(currentTrail.getTrailId());
@@ -166,6 +170,8 @@ class HerbiboarsOverlay extends Overlay
 
 		if (currentTrail != null || finishId > 0)
 		{
+			if (finishId <= 0)
+				drawLine(graphics, "currentTrail:" + currentTrail.toString() +  "||" + currentPath, Color.YELLOW);
 			Region region = client.getRegion();
 			Tile[][][] tiles = region.getTiles();
 
@@ -191,9 +197,12 @@ class HerbiboarsOverlay extends Overlay
 						}
 						Point loc = gameObject.getWorldLocation();
 						//End object to trigger next trail
-						if (currentTrail != null && loc.equals(currentTrail.getObjectLoc(currentPath)))
+						if (currentTrail != null && (loc.equals(currentTrail.getObjectLoc(currentPath)) || loc.equals(currentTrail.getFakeLoc(currentPath))))
 						{
-							OverlayUtil.renderTileOverlay(graphics, gameObject, "", Color.CYAN);
+							Color col = Color.CYAN;
+							if (loc.equals(currentTrail.getFakeLoc(currentPath)))
+								col = Color.RED;
+							OverlayUtil.renderTileOverlay(graphics, gameObject, "", col);
 							break;
 						}
 						//Herbiboar tunnel
@@ -219,14 +228,10 @@ class HerbiboarsOverlay extends Overlay
 					}
 					//Trails
 					int id = groundObject.getId();
-					if (shownTrails.contains(id))
+					if (shownTrails.contains(id) && ((currentTrail == null && finishId > 0) ||
+							(currentTrail != null && currentTrail.getTrailId() != id && currentTrail.getTrailId() + 1 != id))) //second check to prevent next trail shown
 					{
-						Color color;
-						if (currentTrail != null && (currentTrail.getTrailId() == id || currentTrail.getTrailId() + 1 == id))
-							color = Color.RED;
-						else
-							color = Color.WHITE;
-						OverlayUtil.renderTileOverlay(graphics, groundObject, "", color);
+						OverlayUtil.renderTileOverlay(graphics, groundObject, "", Color.WHITE);
 					}
 					//Herbiboar tunnel
 					if (finishId > 0)
@@ -276,6 +281,11 @@ class HerbiboarsOverlay extends Overlay
 			}
 		}
 
+		for (int i : shownTrails)
+		{
+			drawLine(graphics, i+"", Color.GREEN);
+		}
+
 		return null;
 	}
 
@@ -288,7 +298,7 @@ class HerbiboarsOverlay extends Overlay
 
 	private void startText(int x, int y)
 	{
-		this.x = x;
+		this.x = x+20;
 		this.y = y;
 	}
 
