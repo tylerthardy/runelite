@@ -78,9 +78,20 @@ public abstract class TileObjectQuery<EntityType extends TileObject, QueryType> 
 	}
 
 	@SuppressWarnings("unchecked")
-	public QueryType atWorldLocation(Point location)
+	public QueryType atWorldLocation(Point... locations)
 	{
-		predicate = and(object -> object.getWorldLocation().equals(location));
+		predicate = and(object ->
+		{
+			for (Point location : locations)
+			{
+				if (object.getWorldLocation().equals(location))
+				{
+					return true;
+				}
+			}
+			return false;
+		});
+
 		return (QueryType) this;
 	}
 
