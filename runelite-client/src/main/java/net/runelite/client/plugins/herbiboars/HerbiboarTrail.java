@@ -59,44 +59,31 @@ public enum HerbiboarTrail
 	private final int trailId;
 	private final Point objectLoc1;
 	private final Point objectLoc2;
-	private final Point fakeLoc1;
-	private final Point fakeLoc2;
+	private final Point objectLoc3;
+	private final Point objectLoc4;
 
 
-	HerbiboarTrail(int trailId, Point objectLoc1, Point objectLoc2, Point fakeLoc1, Point fakeLoc2)
+	HerbiboarTrail(int trailId, Point objectLoc1, Point objectLoc2, Point objectLoc3, Point objectLoc4)
 	{
 		this.trailId = trailId;
 		this.objectLoc1 = objectLoc1;
 		this.objectLoc2 = objectLoc2;
-		this.fakeLoc1 = fakeLoc1;
-		this.fakeLoc2 = fakeLoc2;
+		this.objectLoc3 = objectLoc3;
+		this.objectLoc4 = objectLoc4;
 	}
 
-	public Point getObjectLoc(int varbitValue)
+	public Point[] getObjectLocs(int varbitValue)
 	{
 		switch (varbitValue)
 		{
 			case 1:
-				return objectLoc1;
+				return new Point[]{objectLoc1, objectLoc3};
 			case 2:
-				return objectLoc2;
+				return new Point[]{objectLoc2, objectLoc4};
 			case 0:
 			default:
 				return null;
 		}
-	}
 
-	public Point getFakeLoc(int varbitValue)
-	{
-		switch (varbitValue)
-		{
-			case 1:
-				return fakeLoc1;
-			case 2:
-				return fakeLoc2;
-			case 0:
-			default:
-				return null;
-		}
 	}
 }

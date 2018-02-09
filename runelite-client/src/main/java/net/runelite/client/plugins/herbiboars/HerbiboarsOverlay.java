@@ -33,16 +33,14 @@ import net.runelite.api.Point;
 import net.runelite.api.Region;
 import net.runelite.api.Tile;
 import net.runelite.api.Varbits;
-import net.runelite.client.RuneLite;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
+import net.runelite.client.util.QueryRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +54,9 @@ class HerbiboarsOverlay extends Overlay
 
 	private final Client client;
 	private final HerbiboarConfig config;
+
+	@Inject
+	private QueryRunner queryRunner;
 
 	@Inject
 	public HerbiboarsOverlay(Client client, HerbiboarConfig config)
@@ -93,16 +94,16 @@ class HerbiboarsOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics, java.awt.Point parent)
 	{
-		if(!config.enabled())
+		if (!config.enabled())
 		{
 			return null;
 		}
 
-		//Check if trail is shown
+		//Get trail data
 		for (HerbiboarTrail trail : HerbiboarTrail.values())
 		{
 			int trailId = trail.getTrailId();
-			int value =  client.getSetting(Varbits.valueOf("HB_TRAIL_" + trailId));
+			int value = client.getSetting(Varbits.valueOf("HB_TRAIL_" + trailId));
 			if (value > 0)
 			{
 				shownTrails.add(trail.getTrailId());
@@ -115,7 +116,7 @@ class HerbiboarsOverlay extends Overlay
 			}
 		}
 
-		//Check if trail is finished (at tunnel)
+		//Get finish data
 		int finishId = client.getSetting(Varbits.HB_FINISH);
 		if (finishId > 0 && currentTrail != null)
 		{
@@ -126,6 +127,36 @@ class HerbiboarsOverlay extends Overlay
 		}
 
 		//Drawing (draw trails if there is a current trail or finished; otherwise, draw start rocks)
+		/*if (config.isObjectShown())
+		{
+			GameObjectQuery goQuery = new GameObjectQuery().atWorldLocation(currentTrail.getObjectLocs(currentPath));
+			GameObject[] nextTrailObjects = queryRunner.runQuery(goQuery);
+			for (GameObject trailObject : nextTrailObjects)
+			{
+				OverlayUtil.renderTileOverlay(graphics, trailObject, "", config.getObjectColor());
+			}
+		}
+
+		if (config.isStartShown())
+		{
+			GameObjectQuery goQuery = new GameObjectQuery().atWorldLocation(currentTrail.getObjectLocs(currentPath));
+			GameObject[] nextTrailObjects = queryRunner.runQuery(goQuery);
+			for (GameObject trailObject : nextTrailObjects)
+			{
+				OverlayUtil.renderTileOverlay(graphics, trailObject, "", config.getObjectColor());
+			}
+		}
+
+		if (config.isTrailShown())
+		{
+
+		}
+
+		if (config.isTunnelShown())
+		{
+
+		}*/
+
 		if (currentTrail != null || finishId > 0)
 		{
 			Region region = client.getRegion();
@@ -143,7 +174,7 @@ class HerbiboarsOverlay extends Overlay
 						continue;
 					}
 
-					//Draw GameObjects (objects used to track trails, and some tunnels)
+					//Draw GameObjects (objects used to trigger next trails, and some tunnels)
 					GameObject[] gameObjects = tile.getGameObjects();
 					for (GameObject gameObject : gameObjects)
 					{
@@ -153,9 +184,9 @@ class HerbiboarsOverlay extends Overlay
 						}
 						Point loc = gameObject.getWorldLocation();
 						//GameObject to trigger next trail (mushrooms, mud, seaweed, etc)
-						if (currentTrail != null && (loc.equals(currentTrail.getObjectLoc(currentPath)) || loc.equals(currentTrail.getFakeLoc(currentPath))))
+						if (currentTrail != null && (Arrays.asList(currentTrail.getObjectLocs(currentPath)).contains(loc))) //loc.equals(currentTrail.getObjectLoc(currentPath)) || loc.equals(currentTrail.getObjectLoc(currentPath))))
 						{
-							OverlayUtil.renderTileOverlay(graphics, gameObject, "", Color.CYAN);
+							OverlayUtil.renderTileOverlay(graphics, gameObject, "", config.getObjectColor());
 							break;
 						}
 						//Herbiboar tunnel
@@ -163,7 +194,7 @@ class HerbiboarsOverlay extends Overlay
 						{
 							if (loc.equals(endLocations.get(finishId - 1)))
 							{
-								OverlayUtil.renderTileOverlay(graphics, gameObject, "", Color.CYAN);
+								OverlayUtil.renderTileOverlay(graphics, gameObject, "", config.getTunnelColor());
 								break;
 							}
 						}
@@ -184,7 +215,7 @@ class HerbiboarsOverlay extends Overlay
 					if (shownTrails.contains(id) && ((currentTrail == null && finishId > 0) ||
 							(currentTrail != null && currentTrail.getTrailId() != id && currentTrail.getTrailId() + 1 != id))) //second check to prevent next trail shown
 					{
-						OverlayUtil.renderTileOverlay(graphics, groundObject, "", Color.WHITE);
+						OverlayUtil.renderTileOverlay(graphics, groundObject, "", config.getTrailColor());
 					}
 					//Herbiboar tunnel
 					if (finishId > 0)
@@ -192,7 +223,7 @@ class HerbiboarsOverlay extends Overlay
 						Point loc = groundObject.getWorldLocation();
 						if (loc.equals(endLocations.get(finishId - 1)))
 						{
-							OverlayUtil.renderTileOverlay(graphics, groundObject, "", Color.CYAN);
+							OverlayUtil.renderTileOverlay(graphics, groundObject, "", config.getTunnelColor());
 							break;
 						}
 					}
@@ -203,7 +234,6 @@ class HerbiboarsOverlay extends Overlay
 		{
 			Region region = client.getRegion();
 			Tile[][][] tiles = region.getTiles();
-			Tile closestTile;
 
 			int z = client.getPlane();
 			for (int x = 0; x < REGION_SIZE; ++x)
@@ -227,7 +257,7 @@ class HerbiboarsOverlay extends Overlay
 						int id = gameObject.getId();
 						if (startObjectIds.contains(id))
 						{
-							OverlayUtil.renderTileOverlay(graphics, gameObject, "", Color.cyan);
+							OverlayUtil.renderTileOverlay(graphics, gameObject, "", config.getStartColor());
 						}
 					}
 				}

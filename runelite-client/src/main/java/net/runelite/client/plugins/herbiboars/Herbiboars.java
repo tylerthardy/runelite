@@ -25,16 +25,17 @@
 package net.runelite.client.plugins.herbiboars;
 
 import com.google.common.eventbus.Subscribe;
-import net.runelite.api.Client;
+import com.google.inject.Binder;
+import com.google.inject.Provides;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 @PluginDescriptor(
@@ -51,6 +52,18 @@ public class Herbiboars extends Plugin
 	public Overlay getOverlay()
 	{
 		return overlay;
+	}
+
+	@Override
+	public void configure(Binder binder)
+	{
+		binder.bind(HerbiboarsOverlay.class);
+	}
+
+	@Provides
+	HerbiboarConfig getConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(HerbiboarConfig.class);
 	}
 
 	@Subscribe

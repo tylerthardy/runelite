@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Robin Weymans <Robin.weymans@gmail.com>
+ * Copyright (c) 2017, Tyler <https://github.com/tylerthardy>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,46 +49,90 @@ public interface HerbiboarConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 1,
-		keyName = "hexColorOpenTrap",
-		name = "Open trap",
-		description = "Color of open trap timer"
+			position = 1,
+			keyName = "showStart",
+			name = "Show Start Objects",
+			description = "Show highlights for starting rocks and logs"
 	)
-	default Color getOpenTrapColor()
+	default boolean isStartShown()
 	{
-		return Color.YELLOW;
+		return true;
 	}
 
 	@ConfigItem(
 		position = 2,
-		keyName = "hexColorFullTrap",
-		name = "Full trap",
-		description = "Color of full trap timer"
+		keyName = "colorStart",
+		name = "Start Color",
+		description = "Color for rocks that start the trails"
 	)
-	default Color getFullTrapColor()
+	default Color getStartColor()
+	{
+		return Color.CYAN;
+	}
+
+	@ConfigItem(
+			position = 3,
+			keyName = "showTunnel",
+			name = "Show End Tunnels",
+			description = "Show highlights for tunnels with herbiboars"
+	)
+	default boolean isTunnelShown()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		position = 4,
+		keyName = "colorTunnel",
+		name = "Tunnel Color",
+		description = "Color for tunnels with herbiboars"
+	)
+	default Color getTunnelColor()
 	{
 		return Color.GREEN;
 	}
 
 	@ConfigItem(
-		position = 3,
-		keyName = "hexColorEmptyTrap",
-		name = "Empty trap",
-		description = "Color of empty trap timer"
+			position = 5,
+			keyName = "showObject",
+			name = "Show Trail Objects",
+			description = "Show highlights for mushrooms, mud, seaweed, etc"
 	)
-	default Color getEmptyTrapColor()
+	default boolean isObjectShown()
 	{
-		return Color.RED;
+		return true;
 	}
 
 	@ConfigItem(
-		position = 4,
-		keyName = "hexColorTransTrap",
-		name = "Transitioning trap",
-		description = "Color of transitioning trap timer"
+		position = 6,
+		keyName = "colorGameObject",
+		name = "Trail Object Color",
+		description = "Color for mushrooms, mud, seaweed, etc"
 	)
-	default Color getTransTrapColor()
+	default Color getObjectColor()
 	{
-		return Color.ORANGE;
+		return Color.CYAN;
+	}
+
+	@ConfigItem(
+			position = 7,
+			keyName = "showTrail",
+			name = "Show Trail",
+			description = "Show highlights for trail prints"
+	)
+	default boolean isTrailShown()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+			position = 8,
+			keyName = "colorTrail",
+			name = "Trail Color",
+			description = "Color for mushrooms, mud, seaweed, etc"
+	)
+	default Color getTrailColor()
+	{
+		return Color.WHITE;
 	}
 }
