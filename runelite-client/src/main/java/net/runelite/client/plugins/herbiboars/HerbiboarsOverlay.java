@@ -55,92 +55,50 @@ class HerbiboarsOverlay extends Overlay
 	private static final Logger logger = LoggerFactory.getLogger(HerbiboarsOverlay.class);
 
 	private final Client client;
-	private final RuneLite runelite;
+	private final HerbiboarConfig config;
+
+	@Inject
+	public HerbiboarsOverlay(Client client, HerbiboarConfig config)
+	{
+		setPosition(OverlayPosition.DYNAMIC);
+		this.client = client;
+		this.config = config;
+	}
 
 	private static final int REGION_SIZE = 104;
 	private static final int MAX_DISTANCE = 2400;
-
-	private final Varbits[] varbits = {
-			Varbits.HB_TRAIL_31303,
-			Varbits.HB_TRAIL_31306,
-			Varbits.HB_TRAIL_31309,
-			Varbits.HB_TRAIL_31312,
-			Varbits.HB_TRAIL_31315,
-			Varbits.HB_TRAIL_31318,
-			Varbits.HB_TRAIL_31321,
-			Varbits.HB_TRAIL_31324,
-			Varbits.HB_TRAIL_31327,
-			Varbits.HB_TRAIL_31330,
-			Varbits.HB_TRAIL_31333,
-			Varbits.HB_TRAIL_31336,
-			Varbits.HB_TRAIL_31339,
-			Varbits.HB_TRAIL_31342,
-			Varbits.HB_TRAIL_31345,
-			Varbits.HB_TRAIL_31348,
-			Varbits.HB_TRAIL_31351,
-			Varbits.HB_TRAIL_31354,
-			Varbits.HB_TRAIL_31357,
-			Varbits.HB_TRAIL_31360,
-			Varbits.HB_TRAIL_31363,
-			Varbits.HB_TRAIL_31366,
-			Varbits.HB_TRAIL_31369,
-			Varbits.HB_TRAIL_31372,
-			Varbits.HB_STARTED,
-			Varbits.HB_FINISH
-	};
-
-	@Inject
-	public HerbiboarsOverlay(RuneLite runelite, Client client) //, HerbiboarConfig config)
-	{
-		setPosition(OverlayPosition.DYNAMIC);
-		this.runelite = runelite;
-		this.client = client;
-		//this.config = config;
-	}
-
-	private final int X_START = 0;
-	private final int Y_START = 100;
-	private int x = X_START;
-	private int y = Y_START;
-
-	private Color[] colorz = {
-			Color.WHITE,
-			Color.RED,
-			Color.CYAN,
-			Color.GREEN,
-			Color.YELLOW
-	};
-
-	private final ArrayList<Integer> startObjectIds = new ArrayList<Integer>(Arrays.asList(
+	private final ArrayList<Integer> startObjectIds = new ArrayList<>(Arrays.asList(
 			30519,
 			30520,
 			30521,
 			30522,
 			30523
 	));
-	private final List<Point> endLocations = new ArrayList<Point>(Arrays.asList(
+	private final List<Point> endLocations = new ArrayList<>(Arrays.asList(
 			new Point(3693, 3798),
 			new Point(3702, 3808),
 			new Point(3703, 3826),
 			new Point(3710, 3881),
-			null,
+			new Point(3700, 3877),
 			new Point(3715, 3840),
 			new Point(3751, 3849),
 			new Point(3685, 3869),
 			new Point(3681, 3863)
 	));
 
-	private Set<Integer> shownTrails = new HashSet<Integer>();
+	private Set<Integer> shownTrails = new HashSet<>();
 	private HerbiboarTrail currentTrail;
 	private int currentPath;
 
 	@Override
 	public Dimension render(Graphics2D graphics, java.awt.Point parent)
 	{
-		startText(X_START, Y_START);
-		drawLine(graphics, client.getLocalPlayer().getWorldLocation().toString(),Color.WHITE);
+		if(!config.enabled())
+		{
+			return null;
+		}
 
-		int finishId = client.getSetting(Varbits.HB_FINISH);
+		//Check if trail is shown
 		for (HerbiboarTrail trail : HerbiboarTrail.values())
 		{
 			int trailId = trail.getTrailId();
@@ -157,9 +115,8 @@ class HerbiboarsOverlay extends Overlay
 			}
 		}
 
-		drawLine(graphics, "finishId: "+finishId, Color.WHITE);
-
-		//Finish trail
+		//Check if trail is finished (at tunnel)
+		int finishId = client.getSetting(Varbits.HB_FINISH);
 		if (finishId > 0 && currentTrail != null)
 		{
 			shownTrails.add(currentTrail.getTrailId());
@@ -168,10 +125,9 @@ class HerbiboarsOverlay extends Overlay
 			currentPath = -1;
 		}
 
+		//Drawing (draw trails if there is a current trail or finished; otherwise, draw start rocks)
 		if (currentTrail != null || finishId > 0)
 		{
-			if (finishId <= 0)
-				drawLine(graphics, "currentTrail:" + currentTrail.toString() +  "||" + currentPath, Color.YELLOW);
 			Region region = client.getRegion();
 			Tile[][][] tiles = region.getTiles();
 
@@ -187,7 +143,7 @@ class HerbiboarsOverlay extends Overlay
 						continue;
 					}
 
-					//Draw game objects
+					//Draw GameObjects (objects used to track trails, and some tunnels)
 					GameObject[] gameObjects = tile.getGameObjects();
 					for (GameObject gameObject : gameObjects)
 					{
@@ -196,13 +152,10 @@ class HerbiboarsOverlay extends Overlay
 							continue;
 						}
 						Point loc = gameObject.getWorldLocation();
-						//End object to trigger next trail
+						//GameObject to trigger next trail (mushrooms, mud, seaweed, etc)
 						if (currentTrail != null && (loc.equals(currentTrail.getObjectLoc(currentPath)) || loc.equals(currentTrail.getFakeLoc(currentPath))))
 						{
-							Color col = Color.CYAN;
-							if (loc.equals(currentTrail.getFakeLoc(currentPath)))
-								col = Color.RED;
-							OverlayUtil.renderTileOverlay(graphics, gameObject, "", col);
+							OverlayUtil.renderTileOverlay(graphics, gameObject, "", Color.CYAN);
 							break;
 						}
 						//Herbiboar tunnel
@@ -216,7 +169,7 @@ class HerbiboarsOverlay extends Overlay
 						}
 					}
 
-					//Draw ground objects
+					//Draw GroundObjects (tracks on trails, and some tunnels)
 					GroundObject groundObject = tile.getGroundObject();
 					if (groundObject == null)
 					{
@@ -281,11 +234,6 @@ class HerbiboarsOverlay extends Overlay
 			}
 		}
 
-		for (int i : shownTrails)
-		{
-			drawLine(graphics, i+"", Color.GREEN);
-		}
-
 		return null;
 	}
 
@@ -294,21 +242,5 @@ class HerbiboarsOverlay extends Overlay
 		shownTrails.clear();
 		currentTrail = null;
 		currentPath = -1;
-	}
-
-	private void startText(int x, int y)
-	{
-		this.x = x+20;
-		this.y = y;
-	}
-
-	private void drawLine(Graphics2D graphics, String str, Color col)
-	{
-		FontMetrics fm = graphics.getFontMetrics();
-		y += fm.getHeight();
-		graphics.setColor(Color.BLACK);
-		graphics.drawString(str, x+1, y+1);
-		graphics.setColor(col);
-		graphics.drawString(str, x, y);
 	}
 }
