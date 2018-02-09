@@ -139,6 +139,7 @@ class HerbiboarsOverlay extends Overlay
 	{
 		startText(X_START, Y_START);
 		drawLine(graphics, client.getLocalPlayer().getWorldLocation().toString(),Color.WHITE);
+
 		int finishId = client.getSetting(Varbits.HB_FINISH);
 		for (HerbiboarTrail trail : HerbiboarTrail.values())
 		{
@@ -167,7 +168,6 @@ class HerbiboarsOverlay extends Overlay
 		{
 			Region region = client.getRegion();
 			Tile[][][] tiles = region.getTiles();
-			Tile closestTile;
 
 			int z = client.getPlane();
 			for (int x = 0; x < REGION_SIZE; ++x)

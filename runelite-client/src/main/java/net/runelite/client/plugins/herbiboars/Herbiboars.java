@@ -47,19 +47,6 @@ public class Herbiboars extends Plugin
 	@Inject
 	HerbiboarsOverlay overlay;
 
-	@Inject
-	@Nullable
-	Client client;
-
-	@Override
-	protected void startUp() throws Exception
-	{
-		System.out.println("Plugin initted");
-	}
-	@Override
-	protected void shutDown() throws Exception
-	{
-	}
 	@Override
 	public Overlay getOverlay()
 	{
