@@ -393,6 +393,7 @@ public class WidgetID
 
 	static class FairyRing
 	{
+		static final int HEADER = 6;
 		static final int LIST = 7;
 		static final int SEPARATOR = 9;
 		static final int SCROLLBAR = 152;
