@@ -24,10 +24,15 @@
  */
 package net.runelite.client.plugins.fairyrings;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
+import com.sun.glass.events.KeyEvent;
 import net.runelite.api.Client;
+import net.runelite.api.KeyFocusListener;
+import net.runelite.api.events.KeyPressed;
+import net.runelite.api.events.KeyReleased;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
@@ -56,6 +61,12 @@ public class FairyRings extends Plugin
 	@Inject
 	private FairyRingsOverlay overlay;
 
+	private List<Widget> favAddWidgets = new ArrayList<Widget>();
+	private List<Widget> destinationWidgets = new ArrayList<Widget>();
+	int lineNums = 0;
+	private Widget fairyRing;
+	private String filter = "";
+
 	@Override
 	public void configure(Binder binder)
 	{
@@ -82,28 +93,35 @@ public class FairyRings extends Plugin
 	{
 		checkListVoid();
 	}
-	int lineNums = 0;
 
-	private List<Widget> favAddWidgets = new ArrayList<Widget>();
-	private List<Widget> destinationWidgets = new ArrayList<Widget>();
 	private void checkListVoid()
 	{
 		if (!config.enabled())
 		{
-			return;
-		}
-
-		overlay.resetLines();
-
-		if (client.getWidget(WidgetInfo.FAIRY_RING) == null)
-		{
-			overlay.addLine("No widget");
 			favAddWidgets.clear();
 			destinationWidgets.clear();
 			return;
 		}
 
+		overlay.resetLines();
 
+		//Check if fairy ring UI open
+		fairyRing = client.getWidget(WidgetInfo.FAIRY_RING);
+		if (fairyRing == null)
+		{
+			overlay.addLine("No widget");
+			favAddWidgets.clear();
+			destinationWidgets.clear();
+			filter = "";
+
+			return;
+		}
+
+		//Update filter
+		Widget header = client.getWidget(WidgetInfo.FAIRY_RING_HEADER);
+		header.setText(filter + "*");
+
+		//Get list
 		Widget list = client.getWidget(WidgetInfo.FAIRY_RING_LIST);
 
 		//Store widgets
@@ -136,9 +154,11 @@ public class FairyRings extends Plugin
 				}
 			}
 		}
+
 		overlay.addLine("Fav:" + favAddWidgets.size());
 		overlay.addLine("Widg:" + destinationWidgets.size());
 
+		//Show/hide widgets based on filter
 		int y = client.getWidget(WidgetInfo.FAIRY_RING_LIST_SEPARATOR).getRelativeY() + SEPARATOR_PADDING;
 		for (int i = 0; i < destinationWidgets.size(); i++)
 		{
@@ -154,7 +174,7 @@ public class FairyRings extends Plugin
 			{
 				continue;
 			}
-			if (config.getFilter().isEmpty() || destination.toLowerCase().contains(config.getFilter().toLowerCase()))
+			if (filter.isEmpty() || destination.toLowerCase().contains(filter.toLowerCase()))
 			{
 				cw.setHidden(false);
 				dw.setHidden(false);
@@ -176,9 +196,37 @@ public class FairyRings extends Plugin
 			}
 		}
 
+		//Show/hide scrollbar based on number shown
 		client.getWidget(WidgetInfo.FAIRY_RING_LIST_SCROLLBAR).setHidden(y < list.getHeight());
 		overlay.addLine(y + "/" + list.getHeight());
 
 		lineNums = overlay.lineCount();
 	}
+
+	@Subscribe
+	public void onKeyPressed(KeyPressed event)
+	{
+		keyPressed(event);
+	}
+
+	private void keyPressed(KeyPressed event)
+	{
+		if (fairyRing == null)
+		{
+			return;
+		}
+
+		if (filter.length() > 0 && event.getKeyEvent().getKeyCode() == KeyEvent.VK_BACKSPACE)
+		{
+			filter = filter.substring(0, filter.length() - 1);
+			return;
+		}
+
+		char key = event.getKeyEvent().getKeyChar();
+		if (Character.isAlphabetic(key) ||	Character.isSpaceChar(key))
+		{
+			filter += key;
+		}
+	}
+
 }
