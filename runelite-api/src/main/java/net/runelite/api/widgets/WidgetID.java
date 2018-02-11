@@ -78,6 +78,7 @@ public class WidgetID
 	public static final int RAIDS_REWARD_GROUP_ID = 539;
 	public static final int EXPERIENCE_TRACKER_GROUP_ID = 122;
 	public static final int TITHE_FARM_GROUP_ID = 241;
+	public static final int FAIRY_RING_GROUP_ID = 381;
 
 	static class WorldMap
 	{
@@ -361,7 +362,7 @@ public class WidgetID
 	{
 		static final int POINTS_INFOBOX = 3;
 	}
-	
+
 	static class ExperienceDrop
 	{
 		static final int DROP_1 = 15;
@@ -388,5 +389,13 @@ public class WidgetID
 	{
 		static final int WIDGET = 1;
 		static final int BOTTOM_BAR = 14;
+	}
+
+	static class FairyRing
+	{
+		static final int HEADER = 6;
+		static final int LIST = 7;
+		static final int SEPARATOR = 9;
+		static final int SCROLLBAR = 152;
 	}
 }

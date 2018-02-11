@@ -48,6 +48,7 @@ public abstract class WidgetItemQuery extends Query<WidgetItem, WidgetItemQuery>
 	}
 
 	public WidgetItemQuery indexEquals(int... indexes)
+
 	{
 		predicate = and(item ->
 		{
