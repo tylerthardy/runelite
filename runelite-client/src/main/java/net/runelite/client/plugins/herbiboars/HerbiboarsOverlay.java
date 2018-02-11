@@ -33,9 +33,6 @@ import net.runelite.api.Point;
 import net.runelite.api.Region;
 import net.runelite.api.Tile;
 import net.runelite.api.Varbits;
-import net.runelite.api.queries.GameObjectQuery;
-import net.runelite.api.queries.GroundObjectQuery;
-import net.runelite.api.queries.TileObjectQuery;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -46,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -151,51 +147,7 @@ class HerbiboarsOverlay extends Overlay
 			currentPath = -1;
 		}
 
-		//////////Drawing (draw trails if there is a current trail or finished; otherwise, draw start rocks)
-
-		/*//Draw trail start objects (game)
-		if (config.isStartShown())
-		{
-			GameObjectQuery goQuery = new GameObjectQuery().idEquals(startObjectIds);
-			GameObject[] startObjects = queryRunner.runQuery(goQuery);
-			for (GameObject startObject : startObjects)
-			{
-				OverlayUtil.renderClickboxOverlay(graphics, startObject, "", config.getStartColor());
-			}
-		}
-
-		//Draw trail progression objects (game)
-		if (config.isObjectShown())
-		{
-			GameObjectQuery goQuery = new GameObjectQuery().atWorldLocation(currentTrail.getObjectLocs(currentPath));
-			GameObject[] nextTrailObjects = queryRunner.runQuery(goQuery);
-			for (GameObject trailObject : nextTrailObjects)
-			{
-				OverlayUtil.renderClickboxOverlay(graphics, trailObject, "", config.getObjectColor());
-			}
-		}
-
-		//Draw trail (ground)
-		if (config.isTrailShown())
-		{
-			int[] ids = shownTrails.stream()
-					.filter(x -> !x.equals(currentTrail.getTrailId()))
-					.mapToInt(Integer::intValue)
-					.toArray();
-			GroundObjectQuery goQuery = new GroundObjectQuery().idEquals(ids);
-			GroundObject[] trailTracks = queryRunner.runQuery(goQuery);
-			for (GroundObject trailTrack : trailTracks)
-			{
-				OverlayUtil.renderClickboxOverlay(graphics, trailTrack, "", config.getTrailColor());
-			}
-		}
-
-		//Draw end tunnel objects (ground/game)
-		if (config.isTunnelShown())
-		{
-
-		}*/
-
+		/////Drawing (draw trails if there is a current trail or finished; otherwise, draw start rocks)
 		if (currentTrail != null || finishId > 0)
 		{
 			Region region = client.getRegion();
@@ -223,13 +175,13 @@ class HerbiboarsOverlay extends Overlay
 						}
 						Point loc = gameObject.getWorldLocation();
 						//GameObject to trigger next trail (mushrooms, mud, seaweed, etc)
-						if (currentTrail != null && (Arrays.asList(currentTrail.getObjectLocs(currentPath)).contains(loc)))
+						if (config.isObjectShown() && currentTrail != null && Arrays.asList(currentTrail.getObjectLocs(currentPath)).contains(loc))
 						{
 							OverlayUtil.renderTileOverlay(graphics, gameObject, "", config.getObjectColor());
 							break;
 						}
 						//Herbiboar tunnel
-						if (finishId > 0)
+						if (config.isTunnelShown() && finishId > 0)
 						{
 							if (loc.equals(endLocations.get(finishId - 1)))
 							{
@@ -251,13 +203,14 @@ class HerbiboarsOverlay extends Overlay
 					}
 					//Trails
 					int id = groundObject.getId();
-					if (shownTrails.contains(id) && ((currentTrail == null && finishId > 0) ||
-							(currentTrail != null && currentTrail.getTrailId() != id && currentTrail.getTrailId() + 1 != id))) //second check to prevent next trail shown
+					if (config.isTrailShown() && shownTrails.contains(id) &&
+							((currentTrail == null && finishId > 0) ||
+							(currentTrail != null && currentTrail.getTrailId() != id && currentTrail.getTrailId() + 1 != id)))
 					{
 						OverlayUtil.renderTileOverlay(graphics, groundObject, "", config.getTrailColor());
 					}
 					//Herbiboar tunnel
-					if (finishId > 0)
+					if (config.isTunnelShown() && finishId > 0)
 					{
 						Point loc = groundObject.getWorldLocation();
 						if (loc.equals(endLocations.get(finishId - 1)))
@@ -271,6 +224,10 @@ class HerbiboarsOverlay extends Overlay
 		}
 		else
 		{
+			if (!config.isStartShown())
+			{
+				return null;
+			}
 			Region region = client.getRegion();
 			Tile[][][] tiles = region.getTiles();
 
