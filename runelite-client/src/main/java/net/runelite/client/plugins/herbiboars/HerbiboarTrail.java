@@ -82,7 +82,7 @@ public enum HerbiboarTrail
 				return new Point[]{objectLoc2, objectLoc4};
 			case 0:
 			default:
-				return null;
+				return new Point[]{};
 		}
 
 	}

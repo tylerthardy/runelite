@@ -33,7 +33,11 @@ import net.runelite.api.Point;
 import net.runelite.api.Region;
 import net.runelite.api.Tile;
 import net.runelite.api.Varbits;
+import net.runelite.api.queries.GameObjectQuery;
+import net.runelite.api.queries.GroundObjectQuery;
+import net.runelite.api.queries.TileObjectQuery;
 import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import net.runelite.client.util.QueryRunner;
@@ -42,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -62,6 +67,7 @@ class HerbiboarsOverlay extends Overlay
 	public HerbiboarsOverlay(Client client, HerbiboarConfig config)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
+		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		this.client = client;
 		this.config = config;
 	}
@@ -75,6 +81,13 @@ class HerbiboarsOverlay extends Overlay
 			30522,
 			30523
 	));
+	/*private final int[] startObjectIds = {
+			30519,
+			30520,
+			30521,
+			30522,
+			30523
+	};*/
 	private final List<Point> endLocations = new ArrayList<>(Arrays.asList(
 			new Point(3693, 3798),
 			new Point(3702, 3808),
@@ -86,6 +99,18 @@ class HerbiboarsOverlay extends Overlay
 			new Point(3685, 3869),
 			new Point(3681, 3863)
 	));
+	/*private final Point[] endLocations = {
+			new Point(3693, 3798),
+			new Point(3702, 3808),
+			new Point(3703, 3826),
+			new Point(3710, 3881),
+			new Point(3700, 3877),
+			new Point(3715, 3840),
+			new Point(3751, 3849),
+			new Point(3685, 3869),
+			new Point(3681, 3863)
+	};*/
+
 
 	private Set<Integer> shownTrails = new HashSet<>();
 	private HerbiboarTrail currentTrail;
@@ -126,32 +151,46 @@ class HerbiboarsOverlay extends Overlay
 			currentPath = -1;
 		}
 
-		//Drawing (draw trails if there is a current trail or finished; otherwise, draw start rocks)
-		/*if (config.isObjectShown())
-		{
-			GameObjectQuery goQuery = new GameObjectQuery().atWorldLocation(currentTrail.getObjectLocs(currentPath));
-			GameObject[] nextTrailObjects = queryRunner.runQuery(goQuery);
-			for (GameObject trailObject : nextTrailObjects)
-			{
-				OverlayUtil.renderTileOverlay(graphics, trailObject, "", config.getObjectColor());
-			}
-		}
+		//////////Drawing (draw trails if there is a current trail or finished; otherwise, draw start rocks)
 
+		/*//Draw trail start objects (game)
 		if (config.isStartShown())
 		{
+			GameObjectQuery goQuery = new GameObjectQuery().idEquals(startObjectIds);
+			GameObject[] startObjects = queryRunner.runQuery(goQuery);
+			for (GameObject startObject : startObjects)
+			{
+				OverlayUtil.renderClickboxOverlay(graphics, startObject, "", config.getStartColor());
+			}
+		}
+
+		//Draw trail progression objects (game)
+		if (config.isObjectShown())
+		{
 			GameObjectQuery goQuery = new GameObjectQuery().atWorldLocation(currentTrail.getObjectLocs(currentPath));
 			GameObject[] nextTrailObjects = queryRunner.runQuery(goQuery);
 			for (GameObject trailObject : nextTrailObjects)
 			{
-				OverlayUtil.renderTileOverlay(graphics, trailObject, "", config.getObjectColor());
+				OverlayUtil.renderClickboxOverlay(graphics, trailObject, "", config.getObjectColor());
 			}
 		}
 
+		//Draw trail (ground)
 		if (config.isTrailShown())
 		{
-
+			int[] ids = shownTrails.stream()
+					.filter(x -> !x.equals(currentTrail.getTrailId()))
+					.mapToInt(Integer::intValue)
+					.toArray();
+			GroundObjectQuery goQuery = new GroundObjectQuery().idEquals(ids);
+			GroundObject[] trailTracks = queryRunner.runQuery(goQuery);
+			for (GroundObject trailTrack : trailTracks)
+			{
+				OverlayUtil.renderClickboxOverlay(graphics, trailTrack, "", config.getTrailColor());
+			}
 		}
 
+		//Draw end tunnel objects (ground/game)
 		if (config.isTunnelShown())
 		{
 
@@ -184,7 +223,7 @@ class HerbiboarsOverlay extends Overlay
 						}
 						Point loc = gameObject.getWorldLocation();
 						//GameObject to trigger next trail (mushrooms, mud, seaweed, etc)
-						if (currentTrail != null && (Arrays.asList(currentTrail.getObjectLocs(currentPath)).contains(loc))) //loc.equals(currentTrail.getObjectLoc(currentPath)) || loc.equals(currentTrail.getObjectLoc(currentPath))))
+						if (currentTrail != null && (Arrays.asList(currentTrail.getObjectLocs(currentPath)).contains(loc)))
 						{
 							OverlayUtil.renderTileOverlay(graphics, gameObject, "", config.getObjectColor());
 							break;
