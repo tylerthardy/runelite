@@ -182,6 +182,7 @@ public final class KeyFocusListener implements KeyListener, FocusListener {
 
    @Export("keyPressed")
    @ObfuscatedName("keyPressed")
+   @Hook("keyPressed")
    public final synchronized void keyPressed(KeyEvent var1) {
       if(keyboard != null) {
          int var2 = var1.getKeyCode();
