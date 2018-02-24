@@ -57,9 +57,6 @@ class HerbiboarsOverlay extends Overlay
 	private final HerbiboarConfig config;
 
 	@Inject
-	private QueryRunner queryRunner;
-
-	@Inject
 	public HerbiboarsOverlay(Client client, HerbiboarConfig config)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
@@ -77,13 +74,6 @@ class HerbiboarsOverlay extends Overlay
 			30522,
 			30523
 	));
-	/*private final int[] startObjectIds = {
-			30519,
-			30520,
-			30521,
-			30522,
-			30523
-	};*/
 	private final List<Point> endLocations = new ArrayList<>(Arrays.asList(
 			new Point(3693, 3798),
 			new Point(3702, 3808),
@@ -95,18 +85,6 @@ class HerbiboarsOverlay extends Overlay
 			new Point(3685, 3869),
 			new Point(3681, 3863)
 	));
-	/*private final Point[] endLocations = {
-			new Point(3693, 3798),
-			new Point(3702, 3808),
-			new Point(3703, 3826),
-			new Point(3710, 3881),
-			new Point(3700, 3877),
-			new Point(3715, 3840),
-			new Point(3751, 3849),
-			new Point(3685, 3869),
-			new Point(3681, 3863)
-	};*/
-
 
 	private Set<Integer> shownTrails = new HashSet<>();
 	private HerbiboarTrail currentTrail;
