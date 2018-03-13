@@ -228,7 +228,14 @@ public enum Varbits
 	/**
 	 * Multicombat area
 	 */
-	MULTICOMBAT_AREA(4605);
+	MULTICOMBAT_AREA(4605),
+
+	/**
+	 * Miscellania approval
+	 */
+
+	MISCELLANIA_APPROVAL(72),
+	;
 
 	/**
 	 * varbit id
