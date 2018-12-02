@@ -35,7 +35,7 @@ import java.awt.image.BufferedImage;
 
 enum GameIndicator
 {
-	VENGEANCE_ACTIVE(SpriteID.SPELL_VENGEANCE_OTHER, GameTimerImageType.SPRITE, GraphicID.VENGEANCE, "Vengeance active", "+++", Color.GREEN);
+	VENGEANCE_ACTIVE(SpriteID.SPELL_VENGEANCE_OTHER, GameTimerImageType.SPRITE, GraphicID.VENGEANCE, "Vengeance active");
 
 	@Getter
 	private final String description;
@@ -58,6 +58,10 @@ enum GameIndicator
 		this.description = description;
 		this.text = text;
 		this.textColor = textColor;
+	}
+	GameIndicator(int imageId, GameTimerImageType idType, int graphicId, String description) // No text
+	{
+		this(imageId, idType, graphicId, description, "", null);
 	}
 
 	BufferedImage getImage(ItemManager itemManager, SpriteManager spriteManager)
