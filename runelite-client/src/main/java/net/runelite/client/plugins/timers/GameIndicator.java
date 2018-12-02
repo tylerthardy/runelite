@@ -25,13 +25,12 @@
 package net.runelite.client.plugins.timers;
 
 import lombok.Getter;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import net.runelite.api.GraphicID;
 import net.runelite.api.SpriteID;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
-
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 
 enum GameIndicator
 {

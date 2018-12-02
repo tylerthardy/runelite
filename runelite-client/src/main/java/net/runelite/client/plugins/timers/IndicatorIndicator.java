@@ -24,13 +24,12 @@
  */
 package net.runelite.client.plugins.timers;
 
+import java.awt.Color;
+import java.awt.Image;
 import lombok.Getter;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBox;
 import net.runelite.client.ui.overlay.infobox.InfoBoxPriority;
-
-import java.awt.Color;
-import java.awt.Image;
 
 public class IndicatorIndicator extends InfoBox
 {
