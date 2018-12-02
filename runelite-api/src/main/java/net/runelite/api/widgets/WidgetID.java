@@ -122,6 +122,7 @@ public class WidgetID
 	public static final int ZEAH_MESS_HALL_GROUP_ID = 235;
 	public static final int LOOTING_BAG_GROUP_ID = 81;
 	public static final int SKOTIZO_GROUP_ID = 308;
+	public static final int ENTERING_HOUSE_GROUP_ID = 71;
 
 	static class WorldMap
 	{
