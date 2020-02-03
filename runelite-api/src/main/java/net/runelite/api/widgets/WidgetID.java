@@ -149,6 +149,7 @@ public class WidgetID
 	public static final int GWD_KC_GROUP_ID = 406;
 	public static final int LMS_GROUP_ID = 333;
 	public static final int LMS_INGAME_GROUP_ID = 328;
+	public static final int POH_COSTUME_CHEST_GROUP_ID = 592;
 
 	static class WorldMap
 	{
@@ -863,5 +864,11 @@ public class WidgetID
 	static class LmsKDA
 	{
 		static final int INFO = 4;
+	}
+
+	static class CostumeRoomChest
+	{
+		static final int WINDOW_CONTAINER = 1;
+		static final int LIST = 2;
 	}
 }

@@ -505,6 +505,8 @@ public enum WidgetInfo
 
 	ACHIEVEMENT_DIARY_CONTAINER(WidgetID.ACHIEVEMENT_DIARY_GROUP_ID, WidgetID.AchievementDiary.CONTAINER),
 
+	COSTUME_ROOM_CHEST_LIST(WidgetID.POH_COSTUME_CHEST_GROUP_ID, WidgetID.CostumeRoomChest.LIST),
+
 	SKILLS_CONTAINER(WidgetID.SKILLS_GROUP_ID, WidgetID.Skills.CONTAINER);
 
 	private final int groupId;
