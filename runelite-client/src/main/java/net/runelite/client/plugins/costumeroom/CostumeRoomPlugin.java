@@ -125,7 +125,7 @@ public class CostumeRoomPlugin extends Plugin
 			{
 				if (itemWidgetGroup.getLabel().getText().equals(MORE_LABEL))
 				{
-					// Force to end by adding to missing
+					// Force entry to end of list by adding to missing
 					missing.add(itemWidgetGroup);
 					continue;
 				}
