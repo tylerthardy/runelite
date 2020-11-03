@@ -29,7 +29,6 @@
 package net.runelite.client.plugins.osleague;
 
 import com.google.gson.Gson;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.VarbitChanged;
@@ -38,6 +37,8 @@ import net.runelite.api.widgets.*;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.osleague.osleague.OsLeagueImport;
+import net.runelite.client.plugins.osleague.osleague.OsLeagueTasks;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
@@ -72,25 +73,6 @@ public class OsLeaguePlugin extends Plugin
 	private Task[] tasks;
 	private Set<String> relics;
 
-	@Data
-	private static class Task
-	{
-		Task(int idx, int osLeagueIndex, String label, int points, boolean completed, int spriteId) {
-			Index = idx;
-			OsLeagueIndex = osLeagueIndex;
-			Points = points;
-			Label = label;
-			Completed = completed;
-			taskDifficulty = TaskDifficulty.fromSprite(spriteId);
-		}
-		public int Index;
-		public int OsLeagueIndex;
-		public boolean Completed;
-		public String Label;
-		public int Points;
-		public TaskDifficulty taskDifficulty;
-	}
-
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
@@ -116,7 +98,15 @@ public class OsLeaguePlugin extends Plugin
 	private void copyJsonToClipboard()
 	{
 		Gson gson = new Gson();
-		String json = gson.toJson(tasks);
+
+		OsLeagueImport osLeagueImport = new OsLeagueImport();
+		osLeagueImport.unlockedRegions = "[\"Misthalin\",\"Karamja\",\"Kandarin\",\"Fremennik\"]";
+		osLeagueImport.filterSelectedStatus = "\"Incomplete\"";
+		osLeagueImport.filterHideLocked = "false";
+		osLeagueImport.unlockedRelics = "{\"0\":{\"relic\":1},\"1\":{\"relic\":2},\"2\":{\"relic\":0}}";
+		osLeagueImport.tasks = gson.toJson(new OsLeagueTasks(tasks));
+
+		String json = gson.toJson(osLeagueImport);
 		final StringSelection stringSelection = new StringSelection(json);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 	}
