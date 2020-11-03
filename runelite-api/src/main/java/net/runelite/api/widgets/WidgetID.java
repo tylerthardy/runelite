@@ -181,6 +181,9 @@ public class WidgetID
 
 	static class TrailblazerAreas
 	{
+		static final int UNLOCKED_LABEL = 7;
+		static final int MAP = 8;
+		static final int BACKGROUND = 9;
 		static final int MISTHALIN_AREA_COLORED = 10;
 		static final int KARAMJA_AREA_COLORED = 11;
 		static final int WILDERNESS_AREA_COLORED = 12;

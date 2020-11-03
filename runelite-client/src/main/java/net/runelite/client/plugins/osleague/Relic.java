@@ -41,7 +41,6 @@ public enum Relic
         this.relicId = relicId;
     }
 
-
     private static final Map<Integer, Relic> SPRITES;
 
     static

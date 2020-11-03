@@ -552,6 +552,8 @@ public enum WidgetInfo
 
 	TRAILBLAZER_RELIC_OVERLAY_ICONS(WidgetID.TRAILBLAZER_RELIC_OVERLAY_GROUP_ID, WidgetID.TrailBlazerRelicOverlay.ICONS),
 
+	TRAILBLAZER_AREAS_MAP(WidgetID.TRAILBLAZER_AREAS_GROUP_ID, WidgetID.TrailblazerAreas.MAP),
+
 	HEALTH_OVERLAY_BAR(WidgetID.HEALTH_OVERLAY_BAR_GROUP_ID, WidgetID.EncounterHealthBar.CONTAINER);
 
 	private final int groupId;

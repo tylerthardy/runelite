@@ -5,7 +5,7 @@ import net.runelite.client.plugins.osleague.Relic;
 
 public class OsLeagueRelic
 {
-    public boolean passive = false;
+    public boolean passive = true;
     @SerializedName("relic")
     public int relicId;
 

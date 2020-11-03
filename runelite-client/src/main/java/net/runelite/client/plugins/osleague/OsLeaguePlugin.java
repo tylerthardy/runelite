@@ -45,13 +45,17 @@ import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
 
 import javax.inject.Inject;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import javax.swing.JOptionPane;
+import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 
 @Slf4j
 @PluginDescriptor(
@@ -73,6 +77,7 @@ public class OsLeaguePlugin extends Plugin
 
 	private Task[] tasks;
 	private List<Relic> relics;
+	private List<Area> areas;
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
@@ -98,10 +103,18 @@ public class OsLeaguePlugin extends Plugin
 
 	private void copyJsonToClipboard()
 	{
+		if (this.tasks == null || this.areas == null || this.relics == null)
+		{
+			showMessageBox(
+					"Cannot Export Data",
+					"You must open the tasks UI, areas UI, and relics UI before exporting.");
+			return;
+		}
+
 		Gson gson = new Gson();
 
 		OsLeagueImport osLeagueImport = new OsLeagueImport();
-		osLeagueImport.unlockedRegions = "[\"Misthalin\",\"Karamja\",\"Kandarin\",\"Fremennik\"]";
+		osLeagueImport.unlockedRegions = gson.toJson(this.areas.stream().map(Area::getName).toArray());
 		osLeagueImport.filterSelectedStatus = "\"Incomplete\"";
 		osLeagueImport.filterHideLocked = "false";
 		osLeagueImport.unlockedRelics = gson.toJson(new OsLeagueRelics(relics.toArray(new Relic[relics.size()])));
@@ -110,6 +123,11 @@ public class OsLeaguePlugin extends Plugin
 		String json = gson.toJson(osLeagueImport);
 		final StringSelection stringSelection = new StringSelection(json);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+
+		showMessageBox(
+				"OsLeague Data Exported!",
+				"Exported data copied to clipboard! Go to osleague.tools, click Manage Data > Import from Runelite, and paste into the box."
+		);
 	}
 
 	@Subscribe
@@ -123,11 +141,35 @@ public class OsLeaguePlugin extends Plugin
 		{
 			GatherRelicData();
 		}
+		if (widgetLoaded.getGroupId() == WidgetID.TRAILBLAZER_AREAS_GROUP_ID)
+		{
+			GatherAreaData();
+		}
+	}
+
+	private void GatherAreaData()
+	{
+		this.areas = new ArrayList<>();
+		Widget mapWidget = client.getWidget(WidgetInfo.TRAILBLAZER_AREAS_MAP);
+		if (mapWidget == null)
+		{
+			return;
+		}
+
+		Widget[] widgets = mapWidget.getStaticChildren();
+		for (Widget widget : widgets)
+		{
+			Area area = Area.getAreaBySprite(widget.getSpriteId());
+			if (area != null)
+			{
+				this.areas.add(area);
+			}
+		}
 	}
 
 	private void GatherRelicData()
 	{
-		this.relics = new ArrayList<Relic>();
+		this.relics = new ArrayList<>();
 		Widget relicIconsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_RELIC_OVERLAY_ICONS);
 		if (relicIconsWidget == null)
 		{
@@ -198,5 +240,18 @@ public class OsLeaguePlugin extends Plugin
 	{
 		String hexColor = Integer.toString(relic.getTextColor(), 16);
 		return !hexColor.equals("aaaaaa");
+	}
+
+	/**
+	 * Open swing message box with specified message and copy data to clipboard
+	 * @param message message to show
+	 */
+	private static void showMessageBox(final String title, final String message)
+	{
+		SwingUtilities.invokeLater(() ->
+				JOptionPane.showMessageDialog(
+						null,
+						message, title,
+						INFORMATION_MESSAGE));
 	}
 }
