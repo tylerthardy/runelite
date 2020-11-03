@@ -75,14 +75,18 @@ public class OsLeaguePlugin extends Plugin
 	@Data
 	private static class Task
 	{
-		Task(String label, int points, boolean completed) {
+		Task(int idx, String label, int points, boolean completed, int spriteId) {
+			Index = idx;
 			Points = points;
 			Label = label;
 			Completed = completed;
+			taskDifficulty = TaskDifficulty.fromSprite(spriteId);
 		}
+		public int Index;
 		public boolean Completed;
 		public String Label;
 		public int Points;
+		public TaskDifficulty taskDifficulty;
 	}
 
 	@Subscribe
@@ -123,14 +127,16 @@ public class OsLeaguePlugin extends Plugin
 
 		Widget taskLabelsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_TASK_LABELS);
 		Widget taskPointsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_TASK_POINTS);
-		if (taskLabelsWidget == null || taskPointsWidget == null)
+		Widget taskDifficultiesWidget = client.getWidget(WidgetInfo.TRAILBLAZER_TASK_DIFFICULTIES);
+		if (taskLabelsWidget == null || taskPointsWidget == null || taskDifficultiesWidget == null)
 		{
 			return;
 		}
 
 		Widget[] taskLabels = taskLabelsWidget.getDynamicChildren();
 		Widget[] taskPoints = taskPointsWidget.getDynamicChildren();
-		if (taskLabels.length != taskPoints.length)
+		Widget[] taskDifficulties = taskDifficultiesWidget.getDynamicChildren();
+		if (taskLabels.length != taskPoints.length || taskPoints.length != taskDifficulties.length)
 		{
 			return;
 		}
@@ -138,7 +144,7 @@ public class OsLeaguePlugin extends Plugin
 		tasks = new Task[taskLabels.length];
 		for (int i = 0; i < taskLabels.length; i++) {
 			String label = taskLabels[i].getText();
-			Task task = new Task(taskLabels[i].getText(), getPoints(taskPoints[i]), isCompleted(taskLabels[i]));
+			Task task = new Task(i, label, getPoints(taskPoints[i]), isCompleted(taskLabels[i]), taskDifficulties[i].getSpriteId());
 			tasks[i] = task;
 		}
 	}
@@ -156,6 +162,6 @@ public class OsLeaguePlugin extends Plugin
 	private boolean isCompleted(Widget taskLabel)
 	{
 		String hexColor = Integer.toString(taskLabel.getTextColor(), 16);
-		return hexColor.equals("9f9f9f");
+		return !hexColor.equals("9f9f9f");
 	}
 }

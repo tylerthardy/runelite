@@ -167,6 +167,7 @@ public class WidgetID
 		static final int TASK_LIST = 8;
 		static final int TEXT_LABELS = 10;
 		static final int POINTS_LABELS = 11;
+		static final int DIFFICULTY_ICONS = 16;
 	}
 
 	static class WorldMap
