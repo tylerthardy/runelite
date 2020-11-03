@@ -75,14 +75,16 @@ public class OsLeaguePlugin extends Plugin
 	@Data
 	private static class Task
 	{
-		Task(int idx, String label, int points, boolean completed, int spriteId) {
+		Task(int idx, int osLeagueIndex, String label, int points, boolean completed, int spriteId) {
 			Index = idx;
+			OsLeagueIndex = osLeagueIndex;
 			Points = points;
 			Label = label;
 			Completed = completed;
 			taskDifficulty = TaskDifficulty.fromSprite(spriteId);
 		}
 		public int Index;
+		public int OsLeagueIndex;
 		public boolean Completed;
 		public String Label;
 		public int Points;
@@ -99,7 +101,6 @@ public class OsLeaguePlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-
 		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "osleague.png");
 
 		titleBarButton = NavigationButton.builder()
@@ -144,7 +145,14 @@ public class OsLeaguePlugin extends Plugin
 		tasks = new Task[taskLabels.length];
 		for (int i = 0; i < taskLabels.length; i++) {
 			String label = taskLabels[i].getText();
-			Task task = new Task(i, label, getPoints(taskPoints[i]), isCompleted(taskLabels[i]), taskDifficulties[i].getSpriteId());
+			int osLeagueIndex = i + RemappedTaskRange.getOffset(i);
+			Task task = new Task(
+					i,
+					osLeagueIndex,
+					label,
+					getPoints(taskPoints[i]),
+					isCompleted(taskLabels[i]),
+					taskDifficulties[i].getSpriteId());
 			tasks[i] = task;
 		}
 	}
