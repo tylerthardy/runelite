@@ -160,6 +160,7 @@ public class WidgetID
 	public static final int CHAMBERS_OF_XERIC_STORAGE_UNIT_PRIVATE_GROUP_ID = 271;
 	public static final int CHAMBERS_OF_XERIC_STORAGE_UNIT_SHARED_GROUP_ID = 550;
 	public static final int CHAMBERS_OF_XERIC_STORAGE_UNIT_INVENTORY_GROUP_ID = 551;
+	public static final int TRAILBLAZER_AREAS_GROUP_ID = 512;
 	public static final int TRAILBLAZER_RELICS_GROUP_ID = 655;
 	public static final int TRAILBLAZER_TASKS_GROUP_ID = 657;
 
@@ -169,6 +170,19 @@ public class WidgetID
 		static final int TEXT_LABELS = 10;
 		static final int POINTS_LABELS = 11;
 		static final int DIFFICULTY_ICONS = 16;
+	}
+
+	static class TrailblazerAreas
+	{
+		static final int MISTHALIN_AREA_COLORED = 10;
+		static final int KARAMJA_AREA_COLORED = 11;
+		static final int WILDERNESS_AREA_COLORED = 12;
+		static final int ASGARNIA_AREA_COLORED = 13;
+		static final int KANDARIN_AREA_COLORED = 14;
+		static final int DESERT_AREA_COLORED = 15;
+		static final int FREMENNIK_AREA_COLORED = 16;
+		static final int TIRANNWN_AREA_COLORED = 17;
+		static final int MORYTANIA_AREA_COLORED = 18;
 	}
 
 	static class TrailblazerRelics
