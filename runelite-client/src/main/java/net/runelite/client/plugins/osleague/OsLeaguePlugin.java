@@ -29,27 +29,23 @@
 package net.runelite.client.plugins.osleague;
 
 import com.google.gson.Gson;
-import com.google.inject.Provides;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.*;
-import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
-import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -183,14 +179,14 @@ public class OsLeaguePlugin extends Plugin
 					i,
 					osLeagueIndex,
 					label,
-					getPoints(taskPoints[i]),
-					isCompleted(taskLabels[i]),
+					getTaskPoints(taskPoints[i]),
+					isTaskCompleted(taskLabels[i]),
 					taskDifficulties[i].getSpriteId());
 			tasks[i] = task;
 		}
 	}
 
-	private int getPoints(Widget taskPoints)
+	private int getTaskPoints(Widget taskPoints)
 	{
 		Matcher m = POINTS_PATTERN.matcher(taskPoints.getText());
 		if (m.find())
@@ -200,7 +196,7 @@ public class OsLeaguePlugin extends Plugin
 		return -1;
 	}
 
-	private boolean isCompleted(Widget taskLabel)
+	private boolean isTaskCompleted(Widget taskLabel)
 	{
 		String hexColor = Integer.toString(taskLabel.getTextColor(), 16);
 		return !hexColor.equals("9f9f9f");
