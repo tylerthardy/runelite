@@ -38,6 +38,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.osleague.osleague.OsLeagueImport;
+import net.runelite.client.plugins.osleague.osleague.OsLeagueRelics;
 import net.runelite.client.plugins.osleague.osleague.OsLeagueTasks;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
@@ -47,8 +48,8 @@ import javax.inject.Inject;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,7 +72,7 @@ public class OsLeaguePlugin extends Plugin
 	private NavigationButton titleBarButton;
 
 	private Task[] tasks;
-	private Set<String> relics;
+	private List<Relic> relics;
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
@@ -103,7 +104,7 @@ public class OsLeaguePlugin extends Plugin
 		osLeagueImport.unlockedRegions = "[\"Misthalin\",\"Karamja\",\"Kandarin\",\"Fremennik\"]";
 		osLeagueImport.filterSelectedStatus = "\"Incomplete\"";
 		osLeagueImport.filterHideLocked = "false";
-		osLeagueImport.unlockedRelics = "{\"0\":{\"relic\":1},\"1\":{\"relic\":2},\"2\":{\"relic\":0}}";
+		osLeagueImport.unlockedRelics = gson.toJson(new OsLeagueRelics(relics.toArray(new Relic[relics.size()])));
 		osLeagueImport.tasks = gson.toJson(new OsLeagueTasks(tasks));
 
 		String json = gson.toJson(osLeagueImport);
@@ -126,19 +127,20 @@ public class OsLeaguePlugin extends Plugin
 
 	private void GatherRelicData()
 	{
-		this.relics = new HashSet<>();
-		Widget relicLabelsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_RELIC_LABELS);
-		if (relicLabelsWidget == null)
+		this.relics = new ArrayList<Relic>();
+		Widget relicIconsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_RELIC_OVERLAY_ICONS);
+		if (relicIconsWidget == null)
 		{
 			return;
 		}
 
-		Widget[] relics = relicLabelsWidget.getDynamicChildren();
-		for (Widget relic : relics)
+		Widget[] widgets = relicIconsWidget.getDynamicChildren();
+		for (Widget widget : widgets)
 		{
-			if (isRelicEnabled(relic))
+			Relic relic = Relic.getRelicBySprite(widget.getSpriteId());
+			if (relic != null)
 			{
-				this.relics.add(relic.getText());
+				this.relics.add(relic);
 			}
 		}
 	}

@@ -163,8 +163,15 @@ public class WidgetID
 	public static final int TRAILBLAZER_AREAS_GROUP_ID = 512;
 	public static final int TRAILBLAZER_RELICS_GROUP_ID = 655;
 	public static final int TRAILBLAZER_TASKS_GROUP_ID = 657;
+	public static final int TRAILBLAZER_RELIC_OVERLAY_GROUP_ID = 651;
 
-	static class TrailblazerTasks
+
+	static class TrailBlazerRelicOverlay
+	{
+		static final int ICONS = 1;
+	}
+
+    static class TrailblazerTasks
 	{
 		static final int TASK_LIST = 8;
 		static final int TEXT_LABELS = 10;
