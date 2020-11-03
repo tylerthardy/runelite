@@ -49,6 +49,9 @@ import javax.inject.Inject;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +74,7 @@ public class OsLeaguePlugin extends Plugin
 	private NavigationButton titleBarButton;
 
 	private Task[] tasks;
+	private Set<String> relics;
 
 	@Data
 	private static class Task
@@ -124,8 +128,37 @@ public class OsLeaguePlugin extends Plugin
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
-		if (widgetLoaded.getGroupId() != WidgetID.TRAILBLAZER_TASKS_GROUP_ID) return;
+		if (widgetLoaded.getGroupId() == WidgetID.TRAILBLAZER_TASKS_GROUP_ID)
+		{
+			GatherTaskData();
+		}
+		if (widgetLoaded.getGroupId() == WidgetID.TRAILBLAZER_RELICS_GROUP_ID)
+		{
+			GatherRelicData();
+		}
+	}
 
+	private void GatherRelicData()
+	{
+		this.relics = new HashSet<>();
+		Widget relicLabelsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_RELIC_LABELS);
+		if (relicLabelsWidget == null)
+		{
+			return;
+		}
+
+		Widget[] relics = relicLabelsWidget.getDynamicChildren();
+		for (Widget relic : relics)
+		{
+			if (isRelicEnabled(relic))
+			{
+				this.relics.add(relic.getText());
+			}
+		}
+	}
+
+	private void GatherTaskData()
+	{
 		Widget taskLabelsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_TASK_LABELS);
 		Widget taskPointsWidget = client.getWidget(WidgetInfo.TRAILBLAZER_TASK_POINTS);
 		Widget taskDifficultiesWidget = client.getWidget(WidgetInfo.TRAILBLAZER_TASK_DIFFICULTIES);
@@ -171,5 +204,11 @@ public class OsLeaguePlugin extends Plugin
 	{
 		String hexColor = Integer.toString(taskLabel.getTextColor(), 16);
 		return !hexColor.equals("9f9f9f");
+	}
+
+	private boolean isRelicEnabled(Widget relic)
+	{
+		String hexColor = Integer.toString(relic.getTextColor(), 16);
+		return !hexColor.equals("aaaaaa");
 	}
 }
