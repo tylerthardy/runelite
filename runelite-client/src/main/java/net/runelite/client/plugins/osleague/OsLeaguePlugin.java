@@ -115,8 +115,6 @@ public class OsLeaguePlugin extends Plugin
 
 		OsLeagueImport osLeagueImport = new OsLeagueImport();
 		osLeagueImport.unlockedRegions = gson.toJson(this.areas.stream().map(Area::getName).toArray());
-		osLeagueImport.filterSelectedStatus = "\"Incomplete\"";
-		osLeagueImport.filterHideLocked = "false";
 		osLeagueImport.unlockedRelics = gson.toJson(new OsLeagueRelics(relics.toArray(new Relic[relics.size()])));
 		osLeagueImport.tasks = gson.toJson(new OsLeagueTasks(tasks));
 

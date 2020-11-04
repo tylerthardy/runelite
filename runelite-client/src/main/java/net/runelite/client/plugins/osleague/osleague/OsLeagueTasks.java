@@ -8,8 +8,6 @@ public class OsLeagueTasks
 {
     public int version = 3;
     public String[] tasks;
-    public String[] todoList;
-    public String[] hidden;
 
     public OsLeagueTasks(Task[] tasks)
     {
@@ -20,7 +18,5 @@ public class OsLeagueTasks
                 .toArray(String[]::new);
 
         this.tasks = taskNumbers;
-        this.hidden = new String[0];
-        this.todoList = new String[0];
     }
 }
