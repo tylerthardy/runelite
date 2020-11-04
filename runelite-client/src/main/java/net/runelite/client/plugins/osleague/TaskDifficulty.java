@@ -8,35 +8,35 @@ import java.util.Map;
 @Getter
 enum TaskDifficulty
 {
-    EASY(2316),
-    MEDIUM(2317),
-    HARD(2318),
-    ELITE(2319),
-    MASTER(2320);
+	EASY(2316),
+	MEDIUM(2317),
+	HARD(2318),
+	ELITE(2319),
+	MASTER(2320);
 
-    private final int spriteId;
+	private final int spriteId;
 
-    private static final Map<Integer, TaskDifficulty> TASK_DIFFICULTY_SPRITE_IDS;
+	private static final Map<Integer, TaskDifficulty> TASK_DIFFICULTY_SPRITE_IDS;
 
-    static
-    {
-        ImmutableMap.Builder<Integer, TaskDifficulty> builder = new ImmutableMap.Builder<>();
+	static
+	{
+		ImmutableMap.Builder<Integer, TaskDifficulty> builder = new ImmutableMap.Builder<>();
 
-        for (TaskDifficulty taskDifficulty : values())
-        {
-            builder.put(taskDifficulty.spriteId, taskDifficulty);
-        }
+		for (TaskDifficulty taskDifficulty : values())
+		{
+			builder.put(taskDifficulty.spriteId, taskDifficulty);
+		}
 
-        TASK_DIFFICULTY_SPRITE_IDS = builder.build();
-    }
+		TASK_DIFFICULTY_SPRITE_IDS = builder.build();
+	}
 
-    TaskDifficulty(int spriteId)
-    {
-        this.spriteId = spriteId;
-    }
+	TaskDifficulty(int spriteId)
+	{
+		this.spriteId = spriteId;
+	}
 
-    static TaskDifficulty fromSprite(int spriteId)
-    {
-        return TASK_DIFFICULTY_SPRITE_IDS.get(spriteId);
-    }
+	static TaskDifficulty fromSprite(int spriteId)
+	{
+		return TASK_DIFFICULTY_SPRITE_IDS.get(spriteId);
+	}
 }

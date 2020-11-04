@@ -92,11 +92,11 @@ public class OsLeaguePlugin extends Plugin
 		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "osleague.png");
 
 		titleBarButton = NavigationButton.builder()
-				.tab(false)
-				.tooltip("Copy Tasks to Clipboard")
-				.icon(icon)
-				.onClick(this::copyJsonToClipboard)
-				.build();
+			.tab(false)
+			.tooltip("Copy Tasks to Clipboard")
+			.icon(icon)
+			.onClick(this::copyJsonToClipboard)
+			.build();
 
 		clientToolbar.addNavigation(titleBarButton);
 	}
@@ -106,8 +106,8 @@ public class OsLeaguePlugin extends Plugin
 		if (this.tasks == null || this.areas == null || this.relics == null)
 		{
 			showMessageBox(
-					"Cannot Export Data",
-					"You must open the tasks UI, areas UI, and relics UI before exporting.");
+				"Cannot Export Data",
+				"You must open the tasks UI, areas UI, and relics UI before exporting.");
 			return;
 		}
 
@@ -123,8 +123,8 @@ public class OsLeaguePlugin extends Plugin
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 
 		showMessageBox(
-				"OsLeague Data Exported!",
-				"Exported data copied to clipboard! Go to osleague.tools, click Manage Data > Import from Runelite, and paste into the box."
+			"OsLeague Data Exported!",
+			"Exported data copied to clipboard! Go to osleague.tools, click Manage Data > Import from Runelite, and paste into the box."
 		);
 	}
 
@@ -204,16 +204,17 @@ public class OsLeaguePlugin extends Plugin
 		}
 
 		tasks = new Task[taskLabels.length];
-		for (int i = 0; i < taskLabels.length; i++) {
+		for (int i = 0; i < taskLabels.length; i++)
+		{
 			String label = taskLabels[i].getText();
 			int osLeagueIndex = i + RemappedTaskRange.getOffset(i);
 			Task task = new Task(
-					i,
-					osLeagueIndex,
-					label,
-					getTaskPoints(taskPoints[i]),
-					isTaskCompleted(taskLabels[i]),
-					taskDifficulties[i].getSpriteId());
+				i,
+				osLeagueIndex,
+				label,
+				getTaskPoints(taskPoints[i]),
+				isTaskCompleted(taskLabels[i]),
+				taskDifficulties[i].getSpriteId());
 			tasks[i] = task;
 		}
 	}
@@ -242,14 +243,15 @@ public class OsLeaguePlugin extends Plugin
 
 	/**
 	 * Open swing message box with specified message and copy data to clipboard
+	 *
 	 * @param message message to show
 	 */
 	private static void showMessageBox(final String title, final String message)
 	{
 		SwingUtilities.invokeLater(() ->
-				JOptionPane.showMessageDialog(
-						null,
-						message, title,
-						INFORMATION_MESSAGE));
+			JOptionPane.showMessageDialog(
+				null,
+				message, title,
+				INFORMATION_MESSAGE));
 	}
 }

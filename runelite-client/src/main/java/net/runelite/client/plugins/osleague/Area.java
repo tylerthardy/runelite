@@ -7,41 +7,42 @@ import java.util.Map;
 
 public enum Area
 {
-    MISTHALIN("Misthalin", 2722),
-    KARAMJA("Karamja", 2723),
-    WILDERNESS("Wilderness", 2724),
-    ASGARNIA("Asgarnia", 2725),
-    KANDARIN("Kandarin", 2726),
-    DESERT("Desert", 2727),
-    FREMENNIK("Fremennik", 2728),
-    TIRANNWN("Tirannwn", 2729),
-    MORYTANIA("Morytania", 2730);
+	MISTHALIN("Misthalin", 2722),
+	KARAMJA("Karamja", 2723),
+	WILDERNESS("Wilderness", 2724),
+	ASGARNIA("Asgarnia", 2725),
+	KANDARIN("Kandarin", 2726),
+	DESERT("Desert", 2727),
+	FREMENNIK("Fremennik", 2728),
+	TIRANNWN("Tirannwn", 2729),
+	MORYTANIA("Morytania", 2730);
 
-    @Getter
-    private final String name;
-    private final int spriteId;
-    Area(String name, int spriteId)
-    {
-        this.name = name;
-        this.spriteId = spriteId;
-    }
+	@Getter
+	private final String name;
+	private final int spriteId;
 
-    private static final Map<Integer, Area> SPRITES;
+	Area(String name, int spriteId)
+	{
+		this.name = name;
+		this.spriteId = spriteId;
+	}
 
-    static
-    {
-        ImmutableMap.Builder<Integer, Area> spriteBuilder = new ImmutableMap.Builder<>();
+	private static final Map<Integer, Area> SPRITES;
 
-        for (Area area : values())
-        {
-            spriteBuilder.put(area.spriteId, area);
-        }
+	static
+	{
+		ImmutableMap.Builder<Integer, Area> spriteBuilder = new ImmutableMap.Builder<>();
 
-        SPRITES = spriteBuilder.build();
-    }
+		for (Area area : values())
+		{
+			spriteBuilder.put(area.spriteId, area);
+		}
 
-    static Area getAreaBySprite(int id)
-    {
-        return SPRITES.get(id);
-    }
+		SPRITES = spriteBuilder.build();
+	}
+
+	static Area getAreaBySprite(int id)
+	{
+		return SPRITES.get(id);
+	}
 }
